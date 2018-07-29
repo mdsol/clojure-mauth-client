@@ -1,6 +1,6 @@
 (defproject clojure-mauth-client "1.0"
   :description "Clojure Mauth Client"
-  :url "https://www.mdsol.com"
+  :url "https://github.com/mdsol/clojure-mauth-client"
   :license {:name "MIT"
             :url "https://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.9.0"]

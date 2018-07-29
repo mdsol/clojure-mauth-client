@@ -6,6 +6,10 @@ There are a minimal set of dependencies (Bouncy Castle isn't one of them!), it i
 
 You do **NOT** need to jump through hoops to use this library. Simple is as simple does.
 
+## Building
+
+Either use the built jar, or `lein jar` to build one based on source.
+
 ## Usage
 
 First, you need to give the library your `App UUID`, `MAuth Private Key` and `MAuth Service URL`.
@@ -52,7 +56,7 @@ Middleware Usage:
 
 Yep, it really is that simple!
 
-##Contributing/ Tests
+## Contributing/ Tests
 Tests can be run using `lein test`.
 
 Contributions are welcome by Pull Request, and we welcome and encourage that!
