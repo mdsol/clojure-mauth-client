@@ -1,5 +1,9 @@
 # Clojure MAuth Client
 
+Leiningen/Boot Coords:
+
+```[clojure-mauth-client "1.0"]```
+
 Here it is folks, a nice, clean MAuth client done in the simplest and most minimal way possible, for your Clojure application.
 
 There are a minimal set of dependencies (Bouncy Castle isn't one of them!), it is fast, and can even be used as middleware for securing your applications.
