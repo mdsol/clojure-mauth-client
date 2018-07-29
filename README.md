@@ -1,5 +1,7 @@
 # Clojure MAuth Client
 
+[![Build Status](https://travis-ci.com/mdsol/clojure-mauth-client.svg?token=16x4FpKmXowpz3fnJFpj&branch=master)](https://travis-ci.com/mdsol/clojure-mauth-client)
+
 Leiningen/Boot Coords:
 
 ```[clojure-mauth-client "1.0"]```
