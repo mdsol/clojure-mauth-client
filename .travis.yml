@@ -1,0 +1,8 @@
+language: clojure
+dist: trusty
+
+install:
+  - lein deps
+
+script:
+  - lein test
