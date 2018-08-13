@@ -38,8 +38,8 @@
 (defn build-mauth-headers [verb uri body app-uuid private-key]
   (let [x-mws-time (epoch-seconds)
         x-mws-authentication (make-mws-auth-string verb uri body app-uuid x-mws-time)]
-    {"x-mws-authentication" (-> x-mws-authentication
+    {"X-MWS-Authentication" (-> x-mws-authentication
                                 msg->sha512
                                 (sign-mauth app-uuid private-key))
-     "x-mws-time" x-mws-time}))
+     "X-MWS-Time" x-mws-time}))
 

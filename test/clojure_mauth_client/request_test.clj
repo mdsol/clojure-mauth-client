@@ -59,8 +59,8 @@
     ))
 
 (def mock-get
-  {:headers {"x-mws-authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:gI/yUeSTbiOWggLvCv2IJP19GFvmlE8RoaUrIpyLE8DY/mCQd8CUPgT9xNHGNqgPGe9f4CZdiFCC79Xvp6seZAq8/CnqA1dsJW6f46scqqTs+4N1TJml6GNCT9xU4tjUyHWFWpCBQlSvpoTFsLSq2d2zas9M9q1sgwPBS/oPGEN1agCQLHZS/Ime4ub8MuXh0Q8aWodqCpVi4GPiap/KLIQEzbvhsdayxmAcs2XDjpt+CReRf3tBCzB1RucVEfBehxtDQGgvrs/UCUbkpq7gY7f2k0RkrH+IopfhYfdNpmCHW12OEQoZ74TVbh61Uo+xcD1der46+tWk0mdnlyXKow=="
-             "x-mws-time" 1532825948}
+  {:headers {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:gI/yUeSTbiOWggLvCv2IJP19GFvmlE8RoaUrIpyLE8DY/mCQd8CUPgT9xNHGNqgPGe9f4CZdiFCC79Xvp6seZAq8/CnqA1dsJW6f46scqqTs+4N1TJml6GNCT9xU4tjUyHWFWpCBQlSvpoTFsLSq2d2zas9M9q1sgwPBS/oPGEN1agCQLHZS/Ime4ub8MuXh0Q8aWodqCpVi4GPiap/KLIQEzbvhsdayxmAcs2XDjpt+CReRf3tBCzB1RucVEfBehxtDQGgvrs/UCUbkpq7gY7f2k0RkrH+IopfhYfdNpmCHW12OEQoZ74TVbh61Uo+xcD1der46+tWk0mdnlyXKow=="
+             "X-MWS-Time" 1532825948}
    :url "https://www.mdsol.com/api/v2/testing"
    :method :get,
    :body "",
@@ -68,8 +68,8 @@
   )
 
 (def mock-post
-  {:headers {"x-mws-authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:nP2uSWenemfLxL5UVHhGn/0DiGtC/BO2yOsAPuZooYzGujYlVUbmWj5lQqRg3RxANHb2Y9r9WxHuyMx9DSTTWIyyFdywEmC1ZCsHAW1TWPGLMsBUCZVHzp9JsLgMG1l0V59x43rD3atRQ7J4O8y32EpvEXafOKEfG6lFcOtT6uSkHxLxIQJnzKNzoXrXjw22Dw6ZAU/pfnwO21si8EwTPx1gmAvkwCfA0qJK4XzwLxWeMp11B+OBK3FK4xznEVp6eV547NKa3k1gmA6dY/mkJ0m2ltaYOK/iuEEFP12XFDvLzCOkYdK9Zvqj71IXCCayZ9AJ/shgdwGV/y1sCXWAKQ=="
-             "x-mws-time" 1532825948},
+  {:headers {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:nP2uSWenemfLxL5UVHhGn/0DiGtC/BO2yOsAPuZooYzGujYlVUbmWj5lQqRg3RxANHb2Y9r9WxHuyMx9DSTTWIyyFdywEmC1ZCsHAW1TWPGLMsBUCZVHzp9JsLgMG1l0V59x43rD3atRQ7J4O8y32EpvEXafOKEfG6lFcOtT6uSkHxLxIQJnzKNzoXrXjw22Dw6ZAU/pfnwO21si8EwTPx1gmAvkwCfA0qJK4XzwLxWeMp11B+OBK3FK4xznEVp6eV547NKa3k1gmA6dY/mkJ0m2ltaYOK/iuEEFP12XFDvLzCOkYdK9Zvqj71IXCCayZ9AJ/shgdwGV/y1sCXWAKQ=="
+             "X-MWS-Time" 1532825948},
    :url "https://www.mdsol.com/api/v2/testing1"
    :method :post
    :body "{\"a\":{\"b\":123}}"
@@ -77,16 +77,16 @@
   )
 
 (def mock-delete
-  {:headers {"x-mws-authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:IzAzkGyzDtxbMlCbbWViYen/9o54B9Ijlnp1UoSIysGr/axJWwph8KRYukS+3DhYFJIBLbS1PfWI74kRTkWJl3Vmb0XgxiRfNCqresqh687ELlhNDt66p2mu/6LaVwbDKUBsIAwkQFomVfAOy3jckWZjHRySD+VABfDf4BAf5hfjTUgil63oOnH6xII51e6M160SFRz1/HpsMU/rnReniPJs22MwiqS6dhe3oU/DAzteawxujSdFA3i6Fol6kdJQN19w+0TTdOSbccjds1Wljqu/+E1ju1rXVAgcL0GuVg4dsCwrjSPY9VWfQOttpA4aHavGWNcPMh1p1kSmqlNa1g=="
-             "x-mws-time" 1532825948}
+  {:headers {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:IzAzkGyzDtxbMlCbbWViYen/9o54B9Ijlnp1UoSIysGr/axJWwph8KRYukS+3DhYFJIBLbS1PfWI74kRTkWJl3Vmb0XgxiRfNCqresqh687ELlhNDt66p2mu/6LaVwbDKUBsIAwkQFomVfAOy3jckWZjHRySD+VABfDf4BAf5hfjTUgil63oOnH6xII51e6M160SFRz1/HpsMU/rnReniPJs22MwiqS6dhe3oU/DAzteawxujSdFA3i6Fol6kdJQN19w+0TTdOSbccjds1Wljqu/+E1ju1rXVAgcL0GuVg4dsCwrjSPY9VWfQOttpA4aHavGWNcPMh1p1kSmqlNa1g=="
+             "X-MWS-Time" 1532825948}
    :url "https://www.mdsol.com/api/v2/testing2"
    :method :delete
    :body ""
    :as :auto})
 
 (def mock-put
-  {:headers {"x-mws-authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:kr/Gk+QwFuNdsTLsIJi21gXr+XDGOI4j1dbDPMn2K/VaLZVwEXHwLZNH2QvsXC44DG2rJfGqsswUANVWRXSMOblLBg8ykb3LGxOzrTZ0nj8e2pQKwxknr2rA794OTJ/+tm1stpyyA4p0SX+UxiBsEv9eRWul1pI8FK0ELm8JC+7IedeeK7br0qa6yqreoLMghFuA1aALO5pgx1khK5/a3702GQqosnAqU01zy5b8ahwNQLbO35i9EbS7cHvXzDhYaSmyx//Nf/h2w3Nux37CcpibwMvcvSxhpdKRMFrlzPU7Okoc8ewrpHEyWYNq6lJgmpRfgsx3LLZGacPcA21aGQ=="
-             "x-mws-time" 1532825948}
+  {:headers {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:kr/Gk+QwFuNdsTLsIJi21gXr+XDGOI4j1dbDPMn2K/VaLZVwEXHwLZNH2QvsXC44DG2rJfGqsswUANVWRXSMOblLBg8ykb3LGxOzrTZ0nj8e2pQKwxknr2rA794OTJ/+tm1stpyyA4p0SX+UxiBsEv9eRWul1pI8FK0ELm8JC+7IedeeK7br0qa6yqreoLMghFuA1aALO5pgx1khK5/a3702GQqosnAqU01zy5b8ahwNQLbO35i9EbS7cHvXzDhYaSmyx//Nf/h2w3Nux37CcpibwMvcvSxhpdKRMFrlzPU7Okoc8ewrpHEyWYNq6lJgmpRfgsx3LLZGacPcA21aGQ=="
+             "X-MWS-Time" 1532825948}
    :url "https://www.mdsol.com/api/v2/testing3"
    :method :put
    :body "{\"a\":{\"b\":123}}"
