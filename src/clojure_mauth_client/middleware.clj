@@ -12,7 +12,8 @@
                                 :else (slurp body))
           valid? (validate! (.toUpperCase (name method)) uri serialized-body (get headers "x-mws-time") (get headers "x-mws-authentication"))]
       (if valid?
-        (handler request)
+        (handler (-> request
+                     (assoc :body serialized-body)))
         {:status 403
          :body "Unauthorized."}
         )
