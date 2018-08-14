@@ -6,7 +6,7 @@
 (defn make-request [type base-url uri body & {:keys [additional-headers]
                                                :or {additional-headers {}}}]
   (let [cred (get-credentials)
-        response (-> [(.toUpperCase type) uri "" (:app-uuid cred) (:private-key cred)]
+        response (-> [(.toUpperCase type) (str base-url uri) (str body) (:app-uuid cred) (:private-key cred)]
                      (#(apply build-mauth-headers %))
                      (merge additional-headers)
                      (#(http/request {:headers %

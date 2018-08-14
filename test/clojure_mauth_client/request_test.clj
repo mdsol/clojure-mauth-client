@@ -67,8 +67,17 @@
    :as :auto}
   )
 
+(def mock-get-with-qs
+  {:headers {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:gI/yUeSTbiOWggLvCv2IJP19GFvmlE8RoaUrIpyLE8DY/mCQd8CUPgT9xNHGNqgPGe9f4CZdiFCC79Xvp6seZAq8/CnqA1dsJW6f46scqqTs+4N1TJml6GNCT9xU4tjUyHWFWpCBQlSvpoTFsLSq2d2zas9M9q1sgwPBS/oPGEN1agCQLHZS/Ime4ub8MuXh0Q8aWodqCpVi4GPiap/KLIQEzbvhsdayxmAcs2XDjpt+CReRf3tBCzB1RucVEfBehxtDQGgvrs/UCUbkpq7gY7f2k0RkrH+IopfhYfdNpmCHW12OEQoZ74TVbh61Uo+xcD1der46+tWk0mdnlyXKow=="
+             "X-MWS-Time" 1532825948}
+   :url "https://www.mdsol.com/api/v2/testing?testABCD=1234"
+   :method :get,
+   :body "",
+   :as :auto}
+  )
+
 (def mock-post
-  {:headers {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:nP2uSWenemfLxL5UVHhGn/0DiGtC/BO2yOsAPuZooYzGujYlVUbmWj5lQqRg3RxANHb2Y9r9WxHuyMx9DSTTWIyyFdywEmC1ZCsHAW1TWPGLMsBUCZVHzp9JsLgMG1l0V59x43rD3atRQ7J4O8y32EpvEXafOKEfG6lFcOtT6uSkHxLxIQJnzKNzoXrXjw22Dw6ZAU/pfnwO21si8EwTPx1gmAvkwCfA0qJK4XzwLxWeMp11B+OBK3FK4xznEVp6eV547NKa3k1gmA6dY/mkJ0m2ltaYOK/iuEEFP12XFDvLzCOkYdK9Zvqj71IXCCayZ9AJ/shgdwGV/y1sCXWAKQ=="
+  {:headers {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:kYZR1udBwE02ct55cSWq5MZuGsC6xgVmK6TWYQ/+2IAbhqG7jZWhP95bPxTqo1f12XUWsX/oeUAp8jhvdUcsXsjVMeBwvQNgnC/HP1TNQasC2LMGfOs76WnsfKoV5zWDh+SNqMqn4pIXce3DALG9d/FB2Uu4mIg9kgQIUnfJJDljfLMjR7aMgDINPU7ToM51TqTJh+ReG7LAVwsEzSwFfj4zZFFpx8XrWn3inx5ZUvT7YcFhW4vOZaeI48HSnj80bCf1LDtWXzU7yk9gon+AlIYBTtrPQTSqyofBGZUtZCBexnoEp6NUhk5XkwqK56jizT7PZCN094kh1eofr3hSTg=="
              "X-MWS-Time" 1532825948},
    :url "https://www.mdsol.com/api/v2/testing1"
    :method :post
@@ -85,7 +94,7 @@
    :as :auto})
 
 (def mock-put
-  {:headers {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:kr/Gk+QwFuNdsTLsIJi21gXr+XDGOI4j1dbDPMn2K/VaLZVwEXHwLZNH2QvsXC44DG2rJfGqsswUANVWRXSMOblLBg8ykb3LGxOzrTZ0nj8e2pQKwxknr2rA794OTJ/+tm1stpyyA4p0SX+UxiBsEv9eRWul1pI8FK0ELm8JC+7IedeeK7br0qa6yqreoLMghFuA1aALO5pgx1khK5/a3702GQqosnAqU01zy5b8ahwNQLbO35i9EbS7cHvXzDhYaSmyx//Nf/h2w3Nux37CcpibwMvcvSxhpdKRMFrlzPU7Okoc8ewrpHEyWYNq6lJgmpRfgsx3LLZGacPcA21aGQ=="
+  {:headers {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:W+hIOQKAp0aEwDthAVaMa5ysJB8ddQdJdTWNonQoDuPEBVAY7F6GUXNoAZCYcosxgbm2rfpwyfLrS7U5b77GMFpnvvUwUSCgRziZNvfhuZfWUuW9po7OkWQUXCDvd/NtJdLOu6o1bKCGHYKjdaw/8AVH876afGyPF7+Ce2vD+YFRfY+zXF0MVWiS2WfwUwLSdOXb+Csnb21XT59zDs8qBg0gUj6WagZiJ+hYTbAt1zcNCdqs/mVt5hKA7ASxB9VY7GI4QM/n0EoyC/ruUm8DYS7kkxuxKeZuNkvpexFR4IPXQax1q7EtCIgw4yekegK210uxxYoOf+EBV2wMIVpKvw=="
              "X-MWS-Time" 1532825948}
    :url "https://www.mdsol.com/api/v2/testing3"
    :method :put
@@ -100,6 +109,14 @@
     (let [creds (get-credentials)]
       (-> (get! "https://www.mdsol.com" "/api/v2/testing")
           (= mock-get)
+          is
+          )
+      ))
+
+  (testing "It should make a valid GET request with a querystring."
+    (let [creds (get-credentials)]
+      (-> (get! "https://www.mdsol.com" "/api/v2/testing?testABCD=1234")
+          (= mock-get-with-qs)
           is
           )
       ))
