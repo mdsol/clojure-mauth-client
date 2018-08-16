@@ -1,6 +1,6 @@
 (ns clojure-mauth-client.middleware
-  (:use clojure-mauth-client.validate
-        clojure.string))
+  (:require [clojure.string :refer [lower-case]])
+  (:use clojure-mauth-client.validate))
 
 (defn- downcase-header-keys [headers]
   (reduce
