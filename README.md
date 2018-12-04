@@ -4,7 +4,7 @@
 
 Leiningen/Boot Coords:
 
-```[clojure-mauth-client "1.0.4"]```
+```[clojure-mauth-client "1.0.5"]```
 
 Here it is folks, a nice, clean MAuth client done in the simplest and most minimal way possible, for your Clojure application.
 
@@ -61,6 +61,12 @@ Middleware Usage:
 ```
 
 Yep, it really is that simple!
+
+Recently, it has come to my attention that cloudflare or cloudfront URLs (ie. api-gateway) were not supported due to SNI configuration in the load balancer. Welp, not anymore!
+To do your calls with SNI, pass `:with-sni? true` to your calls.
+
+For example,
+`(mauth/get! "https://www.mdsol.com" "/api/v2/testing.json" :with-sni? true)`
 
 ## Contributing/ Tests
 Tests can be run using `lein test`.
