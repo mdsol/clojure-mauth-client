@@ -1,4 +1,4 @@
-(defproject clojure-mauth-client "1.0.4"
+(defproject clojure-mauth-client "1.0.5"
   :description "Clojure Mauth Client"
   :url "https://github.com/mdsol/clojure-mauth-client"
   :license {:name "MIT"
@@ -7,7 +7,7 @@
                  [xsc/pem-reader "0.1.1"]
                  [digest "1.4.8"]
                  [org.clojure/data.codec "0.1.1"]
-                 [http-kit "2.2.0"]
+                 [http-kit "2.3.0"]
                  [org.clojure/data.json "0.2.6"]]
   :jvm-opts ~(concat
                [] ;other opts...
