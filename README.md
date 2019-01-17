@@ -4,7 +4,7 @@
 
 Leiningen/Boot Coords:
 
-```[clojure-mauth-client "1.0.5"]```
+```[clojure-mauth-client "1.0.6"]```
 
 Here it is folks, a nice, clean MAuth client done in the simplest and most minimal way possible, for your Clojure application.
 
