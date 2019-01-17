@@ -3,8 +3,6 @@
   :url "https://github.com/mdsol/clojure-mauth-client"
   :license {:name "MIT"
             :url "https://opensource.org/licenses/MIT"}
-  :deploy-repositories [["releases"  {:sign-releases false :url "https://clojars.org"}]
-                        ["snapshots" {:sign-releases false :url "https://clojars.org"}]]
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [xsc/pem-reader "0.1.1"]
                  [digest "1.4.8"]
