@@ -56,13 +56,13 @@
       {"X-MWS-Authentication" (-> x-mws-authentication
                                   msg->sha512
                                   (sign-mauth app-uuid private-key))
-       "X-MWS-Time" x-mws-time}))
+       "X-MWS-Time"           (str x-mws-time)}))
   ([status body app-uuid private-key]
    (let [x-mws-time (epoch-seconds)
          x-mws-authentication (make-mws-auth-string-for-response status body app-uuid x-mws-time)]
      {"X-MWS-Authentication" (-> x-mws-authentication
                                  msg->sha512
                                  (sign-mauth app-uuid private-key))
-      "X-MWS-Time" x-mws-time}))
+      "X-MWS-Time"           (str x-mws-time)}))
   )
 

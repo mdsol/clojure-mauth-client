@@ -38,68 +38,73 @@
                         -----END RSA PRIVATE KEY-----"
                         "https://mauth-sandbox.imedidata.net")
     (with-redefs [clojure-mauth-client.header/epoch-seconds (fn [] 1532825948)
-                  org.httpkit.client/request (fn [{:keys [client timeout filter worker-pool keepalive as follow-redirects max-redirects response
-                                                          trace-redirects allow-unsafe-redirect-methods proxy-host proxy-port tunnel?]
-                                                   :as opts
-                                                   :or {client nil
-                                                        timeout 60000
-                                                        follow-redirects true
-                                                        max-redirects 10
-                                                        filter nil
-                                                        worker-pool nil
-                                                        response (promise)
-                                                        keepalive 120000
-                                                        as :auto
-                                                        tunnel? false
-                                                        proxy-host nil
-                                                        proxy-port 3128}}
-                                                  & [callback]] (future opts))]
+                  clj-http.client/request (fn [{:keys [client timeout filter worker-pool keepalive as follow-redirects max-redirects response
+                                                       trace-redirects allow-unsafe-redirect-methods proxy-host proxy-port tunnel?]
+                                                :as   opts
+                                                :or   {client           nil
+                                                       timeout          60000
+                                                       follow-redirects true
+                                                       max-redirects    10
+                                                       filter           nil
+                                                       worker-pool      nil
+                                                       response         (promise)
+                                                       keepalive        120000
+                                                       as               :auto
+                                                       tunnel?          false
+                                                       proxy-host       nil
+                                                       proxy-port       3128}}
+                                               & [callback]] opts)]
       (f)
       )
     ))
 
 (def mock-get
-  {:headers {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:gI/yUeSTbiOWggLvCv2IJP19GFvmlE8RoaUrIpyLE8DY/mCQd8CUPgT9xNHGNqgPGe9f4CZdiFCC79Xvp6seZAq8/CnqA1dsJW6f46scqqTs+4N1TJml6GNCT9xU4tjUyHWFWpCBQlSvpoTFsLSq2d2zas9M9q1sgwPBS/oPGEN1agCQLHZS/Ime4ub8MuXh0Q8aWodqCpVi4GPiap/KLIQEzbvhsdayxmAcs2XDjpt+CReRf3tBCzB1RucVEfBehxtDQGgvrs/UCUbkpq7gY7f2k0RkrH+IopfhYfdNpmCHW12OEQoZ74TVbh61Uo+xcD1der46+tWk0mdnlyXKow=="
-             "X-MWS-Time" 1532825948}
-   :url "https://www.mdsol.com/api/v2/testing"
-   :method :get,
-   :body "",
-   :as :auto}
+  {:headers          {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:gI/yUeSTbiOWggLvCv2IJP19GFvmlE8RoaUrIpyLE8DY/mCQd8CUPgT9xNHGNqgPGe9f4CZdiFCC79Xvp6seZAq8/CnqA1dsJW6f46scqqTs+4N1TJml6GNCT9xU4tjUyHWFWpCBQlSvpoTFsLSq2d2zas9M9q1sgwPBS/oPGEN1agCQLHZS/Ime4ub8MuXh0Q8aWodqCpVi4GPiap/KLIQEzbvhsdayxmAcs2XDjpt+CReRf3tBCzB1RucVEfBehxtDQGgvrs/UCUbkpq7gY7f2k0RkrH+IopfhYfdNpmCHW12OEQoZ74TVbh61Uo+xcD1der46+tWk0mdnlyXKow=="
+                      "X-MWS-Time"           "1532825948"}
+   :url              "https://www.mdsol.com/api/v2/testing"
+   :method           :get,
+   :body             "\"\"",
+   :throw-exceptions false
+   :as               :auto}
   )
 
 (def mock-get-with-qs
-  {:headers {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:gI/yUeSTbiOWggLvCv2IJP19GFvmlE8RoaUrIpyLE8DY/mCQd8CUPgT9xNHGNqgPGe9f4CZdiFCC79Xvp6seZAq8/CnqA1dsJW6f46scqqTs+4N1TJml6GNCT9xU4tjUyHWFWpCBQlSvpoTFsLSq2d2zas9M9q1sgwPBS/oPGEN1agCQLHZS/Ime4ub8MuXh0Q8aWodqCpVi4GPiap/KLIQEzbvhsdayxmAcs2XDjpt+CReRf3tBCzB1RucVEfBehxtDQGgvrs/UCUbkpq7gY7f2k0RkrH+IopfhYfdNpmCHW12OEQoZ74TVbh61Uo+xcD1der46+tWk0mdnlyXKow=="
-             "X-MWS-Time" 1532825948}
-   :url "https://www.mdsol.com/api/v2/testing?testABCD=1234"
-   :method :get,
-   :body "",
-   :as :auto}
+  {:headers          {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:gI/yUeSTbiOWggLvCv2IJP19GFvmlE8RoaUrIpyLE8DY/mCQd8CUPgT9xNHGNqgPGe9f4CZdiFCC79Xvp6seZAq8/CnqA1dsJW6f46scqqTs+4N1TJml6GNCT9xU4tjUyHWFWpCBQlSvpoTFsLSq2d2zas9M9q1sgwPBS/oPGEN1agCQLHZS/Ime4ub8MuXh0Q8aWodqCpVi4GPiap/KLIQEzbvhsdayxmAcs2XDjpt+CReRf3tBCzB1RucVEfBehxtDQGgvrs/UCUbkpq7gY7f2k0RkrH+IopfhYfdNpmCHW12OEQoZ74TVbh61Uo+xcD1der46+tWk0mdnlyXKow=="
+                      "X-MWS-Time"           "1532825948"}
+   :url              "https://www.mdsol.com/api/v2/testing?testABCD=1234"
+   :method           :get,
+   :body             "\"\"",
+   :throw-exceptions false
+   :as               :auto}
   )
 
 (def mock-post
-  {:headers {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:kYZR1udBwE02ct55cSWq5MZuGsC6xgVmK6TWYQ/+2IAbhqG7jZWhP95bPxTqo1f12XUWsX/oeUAp8jhvdUcsXsjVMeBwvQNgnC/HP1TNQasC2LMGfOs76WnsfKoV5zWDh+SNqMqn4pIXce3DALG9d/FB2Uu4mIg9kgQIUnfJJDljfLMjR7aMgDINPU7ToM51TqTJh+ReG7LAVwsEzSwFfj4zZFFpx8XrWn3inx5ZUvT7YcFhW4vOZaeI48HSnj80bCf1LDtWXzU7yk9gon+AlIYBTtrPQTSqyofBGZUtZCBexnoEp6NUhk5XkwqK56jizT7PZCN094kh1eofr3hSTg=="
-             "X-MWS-Time" 1532825948},
-   :url "https://www.mdsol.com/api/v2/testing1"
-   :method :post
-   :body "{\"a\":{\"b\":123}}"
-   :as :auto}
+  {:headers          {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:kYZR1udBwE02ct55cSWq5MZuGsC6xgVmK6TWYQ/+2IAbhqG7jZWhP95bPxTqo1f12XUWsX/oeUAp8jhvdUcsXsjVMeBwvQNgnC/HP1TNQasC2LMGfOs76WnsfKoV5zWDh+SNqMqn4pIXce3DALG9d/FB2Uu4mIg9kgQIUnfJJDljfLMjR7aMgDINPU7ToM51TqTJh+ReG7LAVwsEzSwFfj4zZFFpx8XrWn3inx5ZUvT7YcFhW4vOZaeI48HSnj80bCf1LDtWXzU7yk9gon+AlIYBTtrPQTSqyofBGZUtZCBexnoEp6NUhk5XkwqK56jizT7PZCN094kh1eofr3hSTg=="
+                      "X-MWS-Time"           "1532825948"},
+   :url              "https://www.mdsol.com/api/v2/testing1"
+   :method           :post
+   :body             "\"{\\\"a\\\":{\\\"b\\\":123}}\""
+   :throw-exceptions false
+   :as               :auto}
   )
 
 (def mock-delete
-  {:headers {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:IzAzkGyzDtxbMlCbbWViYen/9o54B9Ijlnp1UoSIysGr/axJWwph8KRYukS+3DhYFJIBLbS1PfWI74kRTkWJl3Vmb0XgxiRfNCqresqh687ELlhNDt66p2mu/6LaVwbDKUBsIAwkQFomVfAOy3jckWZjHRySD+VABfDf4BAf5hfjTUgil63oOnH6xII51e6M160SFRz1/HpsMU/rnReniPJs22MwiqS6dhe3oU/DAzteawxujSdFA3i6Fol6kdJQN19w+0TTdOSbccjds1Wljqu/+E1ju1rXVAgcL0GuVg4dsCwrjSPY9VWfQOttpA4aHavGWNcPMh1p1kSmqlNa1g=="
-             "X-MWS-Time" 1532825948}
-   :url "https://www.mdsol.com/api/v2/testing2"
-   :method :delete
-   :body ""
-   :as :auto})
+  {:headers          {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:IzAzkGyzDtxbMlCbbWViYen/9o54B9Ijlnp1UoSIysGr/axJWwph8KRYukS+3DhYFJIBLbS1PfWI74kRTkWJl3Vmb0XgxiRfNCqresqh687ELlhNDt66p2mu/6LaVwbDKUBsIAwkQFomVfAOy3jckWZjHRySD+VABfDf4BAf5hfjTUgil63oOnH6xII51e6M160SFRz1/HpsMU/rnReniPJs22MwiqS6dhe3oU/DAzteawxujSdFA3i6Fol6kdJQN19w+0TTdOSbccjds1Wljqu/+E1ju1rXVAgcL0GuVg4dsCwrjSPY9VWfQOttpA4aHavGWNcPMh1p1kSmqlNa1g=="
+                      "X-MWS-Time"           "1532825948"}
+   :url              "https://www.mdsol.com/api/v2/testing2"
+   :method           :delete
+   :body             "\"\"",
+   :throw-exceptions false
+   :as               :auto})
 
 (def mock-put
-  {:headers {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:W+hIOQKAp0aEwDthAVaMa5ysJB8ddQdJdTWNonQoDuPEBVAY7F6GUXNoAZCYcosxgbm2rfpwyfLrS7U5b77GMFpnvvUwUSCgRziZNvfhuZfWUuW9po7OkWQUXCDvd/NtJdLOu6o1bKCGHYKjdaw/8AVH876afGyPF7+Ce2vD+YFRfY+zXF0MVWiS2WfwUwLSdOXb+Csnb21XT59zDs8qBg0gUj6WagZiJ+hYTbAt1zcNCdqs/mVt5hKA7ASxB9VY7GI4QM/n0EoyC/ruUm8DYS7kkxuxKeZuNkvpexFR4IPXQax1q7EtCIgw4yekegK210uxxYoOf+EBV2wMIVpKvw=="
-             "X-MWS-Time" 1532825948}
-   :url "https://www.mdsol.com/api/v2/testing3"
-   :method :put
-   :body "{\"a\":{\"b\":123}}"
-   :as :auto})
+  {:headers          {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:W+hIOQKAp0aEwDthAVaMa5ysJB8ddQdJdTWNonQoDuPEBVAY7F6GUXNoAZCYcosxgbm2rfpwyfLrS7U5b77GMFpnvvUwUSCgRziZNvfhuZfWUuW9po7OkWQUXCDvd/NtJdLOu6o1bKCGHYKjdaw/8AVH876afGyPF7+Ce2vD+YFRfY+zXF0MVWiS2WfwUwLSdOXb+Csnb21XT59zDs8qBg0gUj6WagZiJ+hYTbAt1zcNCdqs/mVt5hKA7ASxB9VY7GI4QM/n0EoyC/ruUm8DYS7kkxuxKeZuNkvpexFR4IPXQax1q7EtCIgw4yekegK210uxxYoOf+EBV2wMIVpKvw=="
+                      "X-MWS-Time"           "1532825948"}
+   :url              "https://www.mdsol.com/api/v2/testing3"
+   :method           :put
+   :body             "\"{\\\"a\\\":{\\\"b\\\":123}}\""
+   :throw-exceptions false
+   :as               :auto})
 
 (def mock-payload (-> {:a {:b 123}}
                       json/write-str))

@@ -1,5 +1,7 @@
 (ns clojure-mauth-client.request
-  (:require [org.httpkit.client :as http])
+  (:require [org.httpkit.client :as http]
+            [clj-http.client :as client]
+            [clojure.data.json :as json])
   (:use clojure-mauth-client.header
         clojure-mauth-client.credentials)
   (:import (javax.net.ssl SSLEngine SNIHostName SSLParameters)
@@ -13,21 +15,28 @@
 
 
 
-(defn make-request [type base-url uri body & {:keys [additional-headers with-sni?]
+(defn make-request [type base-url uri body & {:keys [additional-headers with-sni? throw-exceptions?]
                                                :or {additional-headers {}
-                                                    with-sni? nil}}]
+                                                    with-sni? nil
+                                                    throw-exceptions? false}}]
   (let [cred (get-credentials)
+        ; Tech debt: test with-sni?=true and modify this code if needed
+        ; (https://jira.mdsol.com/browse/MCC-767309)
         options (if with-sni? {:client (http/make-client {:ssl-configurer sni-configure})} {})
         response (-> [(.toUpperCase type) (str base-url uri) (str body) (:app-uuid cred) (:private-key cred)]
                      (#(apply build-mauth-headers %))
                      (merge additional-headers)
-                     (#(http/request (-> {:headers %
+                     ; We use clj-http instead of http-kit because it is supported by the motel-java tracing agent
+                     (#(client/request (-> {:headers %
                                           :url (str base-url uri)
                                           :method (keyword (.toLowerCase type))
                                           :body body
+                                          :throw-exceptions throw-exceptions?
                                           :as :auto}
                                          (merge options)))))]
-    @response
+    ; The following line is here because existing clients expect a String instead of a LazySeq.
+    ; When we're ready to make a breaking change, we should return "response" directly with no modification.
+    (update response :body json/write-str)
     )
   )
 

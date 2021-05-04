@@ -8,6 +8,7 @@
                  [digest "1.4.8"]
                  [org.clojure/data.codec "0.1.1"]
                  [http-kit "2.4.0-alpha2"]
+                 [clj-http "3.9.1"]
                  [org.clojure/data.json "0.2.6"]
                  [javax.xml.bind/jaxb-api "2.2.11"]]
   :jvm-opts ~(concat
