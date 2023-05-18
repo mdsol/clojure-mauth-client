@@ -60,3 +60,20 @@
       )
     )
   )
+
+(deftest header-v2-test
+         (testing "It should generate a valid mauth MWSV2 header for POST"
+           (let [creds (get-credentials)]
+             (-> (build-mauth-headers-v2 "POST" "https://www.mdsol.com/api/v2/testing" "" (:app-uuid creds) (:private-key creds) "abc=testing&test=1234")
+                  (= {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:WG3mMzhcRAm0zYntF8pfYaMjVB3Z9O29XpqvmJ935yZaUTQBjRYVJj2cZo/fU+bMGesMTNLH/aCXLIj9h+h/9ni/hWC2r0C+23qzRpd6JFyy9eFCa1h1JxMrIBSQOC4ESnDl1Wki177TSUYKc43aeM/bJjNBDDtpoazIjGM45G7tSmCNTy+7ORtoubo8W4GTc6hwVA0IhkxCbOjW9iJ40Nruju8BZ9ZSmfO/CfhtkzCEeXnUe542w3AfQMoqnOtDQeZNuU+7xRYMb0L3bSHYRd6WQek7Adk6maAkbCAdXQnAJ+sl78/Sf3yPruSqTwwPuYTPforWv/u3DyhEgXbPjw==;"
+                      "mcc-time"           "1532825948"})
+                   is
+                   )))
+
+         (testing "It should generate a valid mauth MWSV2 header for response"
+           (let [creds (get-credentials)]
+              (-> (build-mauth-headers-v2 200 "{\"test\":\"testing\"}" (:app-uuid creds) (:private-key creds))
+                   (= {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:LFpZhmJRnEoO7/S862U7OhGEFPtMv332pJ0LflJGYBrNRB67XkbTG+/bDDWrF0bWwZ8Z6rJjUhfDUj6xjUoNYlsuQZrVi1x79+uYs/NUasRAp2e4zRnxDCtwzBP6bf/MVxlDUi87Vf4Ko+mXSzGZXRnJVktbOccfNVbvZxUfoq7UxwHsopxJvakQ3ZNZw+G7nxPRwFxEkDuuZGKV0Oq6ujqL+6ydy9RM2Z44J0Tvpf9GXeq0dlWrJDJEULyOM4NrLVPS2m7CJX3rffnUOSbO0UebmS6kRJNgFqKJ58NOAF9bop4S9BUuEdn1k4kt0ol8HZu8rkIyCZSAZIh80opE5g==;"
+                       "mcc-time"           "1532825948"})
+                    is
+                    ))))

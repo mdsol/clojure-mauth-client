@@ -5,7 +5,8 @@
   (:use clojure-mauth-client.header
         clojure-mauth-client.credentials)
   (:import (javax.net.ssl SSLEngine SNIHostName SSLParameters)
-           (java.net URI)))
+           (java.net URI)
+           (java.lang String)))
 
 (defn- sni-configure
   [^SSLEngine ssl-engine ^URI uri]
@@ -13,6 +14,13 @@
     (.setServerNames ssl-params [(SNIHostName. (.getHost uri))])
     (.setSSLParameters ssl-engine ssl-params)))
 
+(defn build-header [mauth-version query-string params]
+      (let [params-with-query-string (conj params query-string)]
+           (if (not (empty? mauth-version))
+             (if (^String .equalsIgnoreCase mauth-version "v2" )
+               (apply build-mauth-headers-v2 params-with-query-string)
+               (apply build-mauth-headers params))
+             (apply build-mauth-headers params))))
 
 
 (defn make-request [type base-url uri body & {:keys [additional-headers with-sni? throw-exceptions?]
@@ -20,11 +28,13 @@
                                                     with-sni? nil
                                                     throw-exceptions? false}}]
   (let [cred (get-credentials)
+        mauth-version (additional-headers :mauth-version)
+        query-params (additional-headers :query-params-map)
         ; Tech debt: test with-sni?=true and modify this code if needed
         ; (https://jira.mdsol.com/browse/MCC-767309)
         options (if with-sni? {:client (http/make-client {:ssl-configurer sni-configure})} {})
         response (-> [(.toUpperCase type) (str base-url uri) (str body) (:app-uuid cred) (:private-key cred)]
-                     (#(apply build-mauth-headers %))
+                     (#(build-header mauth-version query-params %))
                      (merge additional-headers)
                      ; We use clj-http instead of http-kit because it is supported by the motel-java tracing agent
                      (#(client/request (-> {:headers %

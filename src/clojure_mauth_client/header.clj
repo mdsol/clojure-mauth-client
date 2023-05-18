@@ -1,10 +1,15 @@
 (ns clojure-mauth-client.header
   (:require [pem-reader.core :as pem]
             [clojure.data.codec.base64 :as base64]
-            [clojure.string :refer [blank?]])
+            [jdk.security.Signature :as signature :refer [init-sign update sign]]
+            [clojure.string :refer [blank?]]
+            [clojure.java.io :as io]
+            [jdk.net.URLEncoder :as url-encoder])
   (:use digest)
-  (:import (java.io ByteArrayInputStream)
-           (javax.crypto Cipher KeyGenerator SecretKey)))
+    (:import (java.io ByteArrayInputStream)
+      (javax.crypto Cipher KeyGenerator SecretKey)
+      (java.security Security)
+      (org.bouncycastle.jce.provider BouncyCastleProvider)))
 
 (defn- epoch-seconds []
   (long (/ (System/currentTimeMillis) 1000)))
@@ -66,3 +71,67 @@
       "X-MWS-Time"           (str x-mws-time)}))
   )
 
+(defn get-hex-encoded-digested-string [msg]
+      (msg->sha512 msg))
+
+(defn- make-mcc-auth-string [verb url query-param body app-uuid time]
+       (let [body-string (get-hex-encoded-digested-string body)]
+            (->> [verb (get-uri url) body-string app-uuid time query-param]
+                 (clojure.string/join "\n"))))
+
+(defn- make-mcc-auth-string-for-response [status body app-uuid time]
+       (let [body-string (get-hex-encoded-digested-string body)]
+            (->> [status body-string app-uuid time]
+                 (clojure.string/join "\n"))))
+
+(defn keydata [reader]
+      (->> reader
+           (org.bouncycastle.openssl.PEMParser.)
+           (.readObject)))
+(defn pem-string->key-pair [string]
+      "Convert a PEM-formatted private key string to a public/private keypair.
+       Returns java.security.KeyPair."
+      (let [bouncy-castle-provider (Security/addProvider (BouncyCastleProvider.))
+            key-data (keydata (io/reader (.getBytes string)))]
+           (.getKeyPair (org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter.) key-data)))
+
+(defn get-private-key [key-pair]
+      (.getPrivate key-pair))
+
+(defn str->bytes
+      "Convert string to byte array."
+      ([^String s]
+       (str->bytes s "UTF-8"))
+      ([^String s, ^String encoding]
+       (.getBytes s encoding)))
+
+(defn encrypt-signature-rsa [private-key-string string-to-sign]
+      (let [signature-instance (signature/*get-instance "SHA256withRSA")
+            key-pair-object (pem-string->key-pair private-key-string)
+            private-key (get-private-key key-pair-object)
+            byte-array-to-sign (str->bytes (String. string-to-sign))]
+           (signature/init-sign signature-instance private-key)
+           (signature/update signature-instance byte-array-to-sign 0 (alength byte-array-to-sign))
+           (->> (signature/sign signature-instance)
+                base64/encode
+                String.
+                (str ""))))
+
+(defn generate-request-headers-v2 [mcc-auth-string-to-sign epoch-time-to-sign app-uuid private-key]
+      (let [encrypted-signature (encrypt-signature-rsa private-key mcc-auth-string-to-sign)
+            mcc-authentication (str "MWSV2" " " app-uuid ":" encrypted-signature ";")]
+           mcc-authentication))
+
+(defn build-mauth-headers-v2
+  ([verb url body app-uuid private-key query-param]
+   (let [mcc-time (epoch-seconds)
+         mcc-auth-string-to-sign (make-mcc-auth-string verb url query-param body app-uuid mcc-time)
+         authentication (generate-request-headers-v2 mcc-auth-string-to-sign mcc-time app-uuid private-key)]
+     {"mcc-authentication" authentication
+      "mcc-time"           (str mcc-time)}))
+  ([status body app-uuid private-key]
+   (let [mcc-time (epoch-seconds)
+         mcc-auth-string-to-sign (make-mcc-auth-string-for-response status body app-uuid mcc-time)
+         authentication (generate-request-headers-v2 mcc-auth-string-to-sign mcc-time app-uuid private-key)]
+     {"mcc-authentication" authentication
+      "mcc-time"           (str mcc-time)})))
