@@ -37,9 +37,7 @@
                         -----END RSA PRIVATE KEY-----"
                         "https://mauth-sandbox.imedidata.net")
     (with-redefs [clojure-mauth-client.header/epoch-seconds (fn [] 1532825948)]
-      (f)
-      )
-    ))
+      (f))))
 
 (deftest header-test
   (testing "It should generate a valid mauth X-MWS header for GET"
@@ -47,19 +45,14 @@
       (-> (build-mauth-headers "GET" "https://www.mdsol.com/api/v2/testing" "" (:app-uuid creds) (:private-key creds))
           (= {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:gI/yUeSTbiOWggLvCv2IJP19GFvmlE8RoaUrIpyLE8DY/mCQd8CUPgT9xNHGNqgPGe9f4CZdiFCC79Xvp6seZAq8/CnqA1dsJW6f46scqqTs+4N1TJml6GNCT9xU4tjUyHWFWpCBQlSvpoTFsLSq2d2zas9M9q1sgwPBS/oPGEN1agCQLHZS/Ime4ub8MuXh0Q8aWodqCpVi4GPiap/KLIQEzbvhsdayxmAcs2XDjpt+CReRf3tBCzB1RucVEfBehxtDQGgvrs/UCUbkpq7gY7f2k0RkrH+IopfhYfdNpmCHW12OEQoZ74TVbh61Uo+xcD1der46+tWk0mdnlyXKow=="
               "X-MWS-Time"           "1532825948"})
-          is
-          )
-      ))
+          is)))
+
   (testing "It should generate a valid mauth X-MWS header for response"
     (let [creds (get-credentials)]
       (-> (build-mauth-headers 200 "{\"test\":\"testing\"}" (:app-uuid creds) (:private-key creds))
           (= {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:i0rLrgEN8Jy/M4kA1PNNckUxeGU2pL3PGCOjdhRrC6egHVTvNfJLXveVG/7wAU9H4hpLYsThyV1/LRc/OupBZmKYRDzqD6OneZVLkysehk6/OHKb8j8uJQnBSLB72ooIPPIUxJqtasHCi6cdzkBEZf3omp7qzkinhuX2Wi/t70xfC5YmeTydBoe2d+zcIDJZb6+zON4V5CwGMPlCLK6iFD8+hk9ddhszQZ+siHK8SWxrhrMGRDN9xyp3ljw+f62tlpTZi0KEHAr0M/aq49aP3Iv/XrN88Cl5Tt1nGIWslarfJrAxFNfzofO0KULqFB9nRV1NkBbrSMyjGvea7nGNBw=="
               "X-MWS-Time"           "1532825948"})
-          is
-          )
-      )
-    )
-  )
+          is))))
 
 (deftest header-v2-test
          (testing "It should generate a valid mauth MWSV2 header for POST"
@@ -67,13 +60,11 @@
              (-> (build-mauth-headers-v2 "POST" "https://www.mdsol.com/api/v2/testing" "" (:app-uuid creds) (:private-key creds) "abc=testing&test=1234")
                   (= {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:WG3mMzhcRAm0zYntF8pfYaMjVB3Z9O29XpqvmJ935yZaUTQBjRYVJj2cZo/fU+bMGesMTNLH/aCXLIj9h+h/9ni/hWC2r0C+23qzRpd6JFyy9eFCa1h1JxMrIBSQOC4ESnDl1Wki177TSUYKc43aeM/bJjNBDDtpoazIjGM45G7tSmCNTy+7ORtoubo8W4GTc6hwVA0IhkxCbOjW9iJ40Nruju8BZ9ZSmfO/CfhtkzCEeXnUe542w3AfQMoqnOtDQeZNuU+7xRYMb0L3bSHYRd6WQek7Adk6maAkbCAdXQnAJ+sl78/Sf3yPruSqTwwPuYTPforWv/u3DyhEgXbPjw==;"
                       "mcc-time"           "1532825948"})
-                   is
-                   )))
+                   is)))
 
          (testing "It should generate a valid mauth MWSV2 header for response"
            (let [creds (get-credentials)]
               (-> (build-mauth-headers-v2 200 "{\"test\":\"testing\"}" (:app-uuid creds) (:private-key creds))
                    (= {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:LFpZhmJRnEoO7/S862U7OhGEFPtMv332pJ0LflJGYBrNRB67XkbTG+/bDDWrF0bWwZ8Z6rJjUhfDUj6xjUoNYlsuQZrVi1x79+uYs/NUasRAp2e4zRnxDCtwzBP6bf/MVxlDUi87Vf4Ko+mXSzGZXRnJVktbOccfNVbvZxUfoq7UxwHsopxJvakQ3ZNZw+G7nxPRwFxEkDuuZGKV0Oq6ujqL+6ydy9RM2Z44J0Tvpf9GXeq0dlWrJDJEULyOM4NrLVPS2m7CJX3rffnUOSbO0UebmS6kRJNgFqKJ58NOAF9bop4S9BUuEdn1k4kt0ol8HZu8rkIyCZSAZIh80opE5g==;"
                        "mcc-time"           "1532825948"})
-                    is
-                    ))))
+                    is))))

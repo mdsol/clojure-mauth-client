@@ -37,6 +37,7 @@
                         e+viqMbgmORJDP/8vbpd0yZjT25ImysJE5cSCGiqHOotDs3jdlUX
                         -----END RSA PRIVATE KEY-----"
                         "https://mauth-sandbox.imedidata.net")
+
     (with-redefs [clojure-mauth-client.header/epoch-seconds (fn [] 1532825948)
                   clj-http.client/request (fn [{:keys [client timeout filter worker-pool keepalive as follow-redirects max-redirects response
                                                        trace-redirects allow-unsafe-redirect-methods proxy-host proxy-port tunnel?]
@@ -54,9 +55,7 @@
                                                        proxy-host       nil
                                                        proxy-port       3128}}
                                                & [callback]] opts)]
-      (f)
-      )
-    ))
+      (f))))
 
 (def mock-get
   {:headers          {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:gI/yUeSTbiOWggLvCv2IJP19GFvmlE8RoaUrIpyLE8DY/mCQd8CUPgT9xNHGNqgPGe9f4CZdiFCC79Xvp6seZAq8/CnqA1dsJW6f46scqqTs+4N1TJml6GNCT9xU4tjUyHWFWpCBQlSvpoTFsLSq2d2zas9M9q1sgwPBS/oPGEN1agCQLHZS/Ime4ub8MuXh0Q8aWodqCpVi4GPiap/KLIQEzbvhsdayxmAcs2XDjpt+CReRf3tBCzB1RucVEfBehxtDQGgvrs/UCUbkpq7gY7f2k0RkrH+IopfhYfdNpmCHW12OEQoZ74TVbh61Uo+xcD1der46+tWk0mdnlyXKow=="
@@ -65,8 +64,7 @@
    :method           :get,
    :body             "\"\"",
    :throw-exceptions false
-   :as               :auto}
-  )
+   :as               :auto})
 
 (def mock-get-with-qs
   {:headers          {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:gI/yUeSTbiOWggLvCv2IJP19GFvmlE8RoaUrIpyLE8DY/mCQd8CUPgT9xNHGNqgPGe9f4CZdiFCC79Xvp6seZAq8/CnqA1dsJW6f46scqqTs+4N1TJml6GNCT9xU4tjUyHWFWpCBQlSvpoTFsLSq2d2zas9M9q1sgwPBS/oPGEN1agCQLHZS/Ime4ub8MuXh0Q8aWodqCpVi4GPiap/KLIQEzbvhsdayxmAcs2XDjpt+CReRf3tBCzB1RucVEfBehxtDQGgvrs/UCUbkpq7gY7f2k0RkrH+IopfhYfdNpmCHW12OEQoZ74TVbh61Uo+xcD1der46+tWk0mdnlyXKow=="
@@ -75,8 +73,7 @@
    :method           :get,
    :body             "\"\"",
    :throw-exceptions false
-   :as               :auto}
-  )
+   :as               :auto})
 
 (def mock-post
   {:headers          {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:kYZR1udBwE02ct55cSWq5MZuGsC6xgVmK6TWYQ/+2IAbhqG7jZWhP95bPxTqo1f12XUWsX/oeUAp8jhvdUcsXsjVMeBwvQNgnC/HP1TNQasC2LMGfOs76WnsfKoV5zWDh+SNqMqn4pIXce3DALG9d/FB2Uu4mIg9kgQIUnfJJDljfLMjR7aMgDINPU7ToM51TqTJh+ReG7LAVwsEzSwFfj4zZFFpx8XrWn3inx5ZUvT7YcFhW4vOZaeI48HSnj80bCf1LDtWXzU7yk9gon+AlIYBTtrPQTSqyofBGZUtZCBexnoEp6NUhk5XkwqK56jizT7PZCN094kh1eofr3hSTg=="
@@ -85,8 +82,7 @@
    :method           :post
    :body             "\"{\\\"a\\\":{\\\"b\\\":123}}\""
    :throw-exceptions false
-   :as               :auto}
-  )
+   :as               :auto})
 
 (def mock-delete
   {:headers          {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:IzAzkGyzDtxbMlCbbWViYen/9o54B9Ijlnp1UoSIysGr/axJWwph8KRYukS+3DhYFJIBLbS1PfWI74kRTkWJl3Vmb0XgxiRfNCqresqh687ELlhNDt66p2mu/6LaVwbDKUBsIAwkQFomVfAOy3jckWZjHRySD+VABfDf4BAf5hfjTUgil63oOnH6xII51e6M160SFRz1/HpsMU/rnReniPJs22MwiqS6dhe3oU/DAzteawxujSdFA3i6Fol6kdJQN19w+0TTdOSbccjds1Wljqu/+E1ju1rXVAgcL0GuVg4dsCwrjSPY9VWfQOttpA4aHavGWNcPMh1p1kSmqlNa1g=="
@@ -182,41 +178,31 @@
     (let [creds (get-credentials)]
       (-> (get! "https://www.mdsol.com" "/api/v2/testing")
           (= mock-get)
-          is
-          )
-      ))
+          is)))
 
   (testing "It should make a valid GET request with a querystring."
     (let [creds (get-credentials)]
       (-> (get! "https://www.mdsol.com" "/api/v2/testing?testABCD=1234")
           (= mock-get-with-qs)
-          is
-          )
-      ))
+          is)))
 
   (testing "It should make a valid POST request."
     (let [creds (get-credentials)]
       (-> (post! "https://www.mdsol.com" "/api/v2/testing1" mock-payload)
           (= mock-post)
-          is
-          )
-      ))
+          is)))
 
   (testing "It should make a valid DELETE request."
     (let [creds (get-credentials)]
       (-> (delete! "https://www.mdsol.com" "/api/v2/testing2")
           (= mock-delete)
-          is
-          )
-      ))
+          is)))
 
   (testing "It should make a valid PUT request."
     (let [creds (get-credentials)]
       (-> (put! "https://www.mdsol.com" "/api/v2/testing3" mock-payload)
           (= mock-put)
-          is
-          )
-      ))
+          is)))
 
    (testing "It should make a valid POST request with v2 mauth header"
             (let [creds (get-credentials)]
@@ -245,8 +231,7 @@
                  (-> (get! "https://www.mdsol.com" "/api/v2/testing1?testABCD=1234" :additional-headers additional-headers
                            :with-sni? false)
                      (= mock-get-with-qs-v2)
-                     is
-                     )))
+                     is)))
 
    (testing "It should make a valid DELETE request with v2 mauth header"
             (let [creds (get-credentials)]

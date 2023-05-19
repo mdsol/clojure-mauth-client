@@ -1,10 +1,10 @@
 (ns clojure-mauth-client.header
-  (:require [pem-reader.core :as pem]
-            [clojure.data.codec.base64 :as base64]
-            [jdk.security.Signature :as signature :refer [init-sign update sign]]
-            [clojure.string :refer [blank?]]
+  (:require [clojure.data.codec.base64 :as base64]
             [clojure.java.io :as io]
-            [jdk.net.URLEncoder :as url-encoder])
+            [clojure.string :refer [blank?]]
+            [jdk.security.Signature :as signature]
+            [jdk.net.URLEncoder :as url-encoder]
+            [pem-reader.core :as pem])
   (:use digest)
     (:import (java.io ByteArrayInputStream)
       (javax.crypto Cipher KeyGenerator SecretKey)
@@ -18,22 +18,18 @@
   (-> key-str
       .getBytes
       ByteArrayInputStream.
-      pem/read)
-  )
+      pem/read))
 
 (defn- msg->sha512 [msg]
   (-> msg
       .getBytes
-      sha-512)
-  )
+      sha-512))
 
 (defn- get-uri [url]
   (-> url
       java.net.URL.
       .getPath
-      (#(if (blank? %) "/" %))
-      )
-  )
+      (#(if (blank? %) "/" %))))
 
 (defn- sign-mauth [message app-uuid private-key]
   (->> (let [private-key (pem/private-key (read-key private-key))
@@ -46,13 +42,11 @@
 
 (defn- make-mws-auth-string [verb url body app-uuid time]
   (->> [verb (get-uri url) body app-uuid time]
-       (clojure.string/join "\n"))
-  )
+       (clojure.string/join "\n")))
 
 (defn- make-mws-auth-string-for-response [status body app-uuid time]
   (->> [status body app-uuid time]
-       (clojure.string/join "\n"))
-  )
+       (clojure.string/join "\n")))
 
 (defn build-mauth-headers
   ([verb url body app-uuid private-key]
@@ -68,29 +62,28 @@
      {"X-MWS-Authentication" (-> x-mws-authentication
                                  msg->sha512
                                  (sign-mauth app-uuid private-key))
-      "X-MWS-Time"           (str x-mws-time)}))
-  )
+      "X-MWS-Time"           (str x-mws-time)})))
 
 (defn get-hex-encoded-digested-string [msg]
       (msg->sha512 msg))
 
 (defn- make-mcc-auth-string [verb url query-param body app-uuid time]
-       (let [body-string (get-hex-encoded-digested-string body)]
-            (->> [verb (get-uri url) body-string app-uuid time query-param]
-                 (clojure.string/join "\n"))))
+       (let [ all-params [verb (get-uri url) (get-hex-encoded-digested-string body) app-uuid time query-param]]
+            (clojure.string/join "\n" all-params)))
 
 (defn- make-mcc-auth-string-for-response [status body app-uuid time]
-       (let [body-string (get-hex-encoded-digested-string body)]
-            (->> [status body-string app-uuid time]
-                 (clojure.string/join "\n"))))
+       (let [all-params [status (get-hex-encoded-digested-string body) app-uuid time]]
+            (clojure.string/join "\n" all-params)))
 
 (defn keydata [reader]
       (->> reader
            (org.bouncycastle.openssl.PEMParser.)
            (.readObject)))
-(defn pem-string->key-pair [string]
+
+(defn pem-string->key-pair
       "Convert a PEM-formatted private key string to a public/private keypair.
        Returns java.security.KeyPair."
+      [string]
       (let [bouncy-castle-provider (Security/addProvider (BouncyCastleProvider.))
             key-data (keydata (io/reader (.getBytes string)))]
            (.getKeyPair (org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter.) key-data)))

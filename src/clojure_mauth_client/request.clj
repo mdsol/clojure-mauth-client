@@ -5,8 +5,7 @@
   (:use clojure-mauth-client.header
         clojure-mauth-client.credentials)
   (:import (javax.net.ssl SSLEngine SNIHostName SSLParameters)
-           (java.net URI)
-           (java.lang String)))
+           (java.net URI)))
 
 (defn- sni-configure
   [^SSLEngine ssl-engine ^URI uri]
@@ -16,11 +15,11 @@
 
 (defn build-header [mauth-version query-string params]
       (let [params-with-query-string (conj params query-string)]
-           (if (not (empty? mauth-version))
+           (if (not (seq mauth-version))
+             (apply build-mauth-headers params)
              (if (^String .equalsIgnoreCase mauth-version "v2" )
                (apply build-mauth-headers-v2 params-with-query-string)
-               (apply build-mauth-headers params))
-             (apply build-mauth-headers params))))
+               (apply build-mauth-headers params)))))
 
 
 (defn make-request [type base-url uri body & {:keys [additional-headers with-sni? throw-exceptions?]
@@ -29,7 +28,7 @@
                                                     throw-exceptions? false}}]
   (let [cred (get-credentials)
         mauth-version (additional-headers :mauth-version)
-        query-params (additional-headers :query-params-map)
+        query-params (additional-headers :query-param-string)
         ; Tech debt: test with-sni?=true and modify this code if needed
         ; (https://jira.mdsol.com/browse/MCC-767309)
         options (if with-sni? {:client (http/make-client {:ssl-configurer sni-configure})} {})
@@ -46,34 +45,28 @@
                                          (merge options)))))]
     ; The following line is here because existing clients expect a String instead of a LazySeq.
     ; When we're ready to make a breaking change, we should return "response" directly with no modification.
-    (update response :body json/write-str)
-    )
-  )
+    (update response :body json/write-str)))
 
 (defn get! [base-url uri & {:keys [additional-headers with-sni?]
                             :or {additional-headers {}
                                  with-sni? nil}}]
   (make-request "GET" base-url uri "" :additional-headers additional-headers
-                                      :with-sni? with-sni?)
-  )
+                                      :with-sni? with-sni?))
 
 (defn post! [base-url uri body & {:keys [additional-headers with-sni?]
                                   :or {additional-headers {}
                                        with-sni? nil}}]
   (make-request "POST" base-url uri body :additional-headers additional-headers
-                                         :with-sni? with-sni?)
-  )
+                                         :with-sni? with-sni?))
 
 (defn delete! [base-url uri & {:keys [additional-headers with-sni?]
                                :or {additional-headers {}
                                     with-sni? nil}}]
   (make-request "DELETE" base-url uri "" :additional-headers additional-headers
-                                         :with-sni? with-sni?)
-  )
+                                         :with-sni? with-sni?))
 
 (defn put! [base-url uri body & {:keys [additional-headers with-sni?]
                                  :or {additional-headers {}
                                       with-sni? nil}}]
   (make-request "PUT" base-url uri body :additional-headers additional-headers
-                                        :with-sni? with-sni?)
-  )
+                                        :with-sni? with-sni?))
