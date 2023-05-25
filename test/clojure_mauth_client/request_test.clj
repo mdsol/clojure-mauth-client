@@ -103,70 +103,70 @@
    :as               :auto})
 
 (def mock-post-v2
-  {:headers {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:T0XZu8X6bUcKBW/QgX0RnUg0hfbcDfmLrKcQkr2KnO03jFGALsOXpPSAFWgsbP0TvfvwraW7nveyRqXgzDVSFM23kG2bku319Cm5OBtikQHLYZo6BRMZZ+iGvAGh3XEs6dlAlaFLvzvgGn+TFJqbQCbMoeb87UHEif4aLLLIQW3B4GuMFVzU3dqT1jrmte3GBhlEfoKiQiaXMRmEHI+y3rrg7uWSNXLEwmgzygHTRsGD4Mgt8QHd4sprY3M6In/kmPveztAKntFDDteb2YsTck0pyTgh3mi5r0sIEdHcsGhxeO+utgDt3vPUI8QcPvBICuy8BouXVWnDAv6HzQ26og==;"
-             "mcc-time"      "1532825948"
-             :Content-Type "application/json"
-             :Authorization "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
-             :mauth-version "v2"
-             }
-   :url "https://www.mdsol.com/api/v2/testing1"
-   :method :post
-   :body "\"{\\\"a\\\":{\\\"b\\\":123}}\""
+  {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:T0XZu8X6bUcKBW/QgX0RnUg0hfbcDfmLrKcQkr2KnO03jFGALsOXpPSAFWgsbP0TvfvwraW7nveyRqXgzDVSFM23kG2bku319Cm5OBtikQHLYZo6BRMZZ+iGvAGh3XEs6dlAlaFLvzvgGn+TFJqbQCbMoeb87UHEif4aLLLIQW3B4GuMFVzU3dqT1jrmte3GBhlEfoKiQiaXMRmEHI+y3rrg7uWSNXLEwmgzygHTRsGD4Mgt8QHd4sprY3M6In/kmPveztAKntFDDteb2YsTck0pyTgh3mi5r0sIEdHcsGhxeO+utgDt3vPUI8QcPvBICuy8BouXVWnDAv6HzQ26og==;"
+                      "mcc-time"           "1532825948"
+                      :Content-Type        "application/json"
+                      :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
+                      :mauth-version       "v2"
+                      }
+   :url              "https://www.mdsol.com/api/v2/testing1"
+   :method           :post
+   :body             "\"{\\\"a\\\":{\\\"b\\\":123}}\""
    :throw-exceptions false
-   :as :auto})
+   :as               :auto})
 
 (def mock-put-v2
-  {:headers {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:JxNEVDUfC2iV2dNZ+p9bbP/efQaDEYvp1Y6LY7svXE+S4uF1sfOBw296iO3/sDYNm/eQz6OY6o+A0ti4L9kBpQgRqbSq6Q673gLEYOMrCswqMCM0uxJ1g95RBADgZVIg0ssjoSBU8lo1OXxjwhxz17PnDN+KTqw10DT2aiecmbhvvMVj3zAxG0vb9xxkIqYEFFkBolLoevriCL5PLqR8o2H1LmJ4eVvnR0HFetZyFEJM9KNxcQ1H8xYM8bZiocjLwPbCBk2IP3MRmgoeosTSgcAVRw7+7QRIpigz4kfc5pxHTuIa6k8voHyVzpW5uBolUBu7O1CvSgPVn2q/y+qrTQ==;"
-             "mcc-time"      "1532825948"
-             :Content-Type "application/json"
-             :Authorization "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
-             :mauth-version "v2"
-             }
-   :url "https://www.mdsol.com/api/v2/testing1"
-   :method :put
-   :body "\"{\\\"a\\\":{\\\"b\\\":123}}\""
+  {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:JxNEVDUfC2iV2dNZ+p9bbP/efQaDEYvp1Y6LY7svXE+S4uF1sfOBw296iO3/sDYNm/eQz6OY6o+A0ti4L9kBpQgRqbSq6Q673gLEYOMrCswqMCM0uxJ1g95RBADgZVIg0ssjoSBU8lo1OXxjwhxz17PnDN+KTqw10DT2aiecmbhvvMVj3zAxG0vb9xxkIqYEFFkBolLoevriCL5PLqR8o2H1LmJ4eVvnR0HFetZyFEJM9KNxcQ1H8xYM8bZiocjLwPbCBk2IP3MRmgoeosTSgcAVRw7+7QRIpigz4kfc5pxHTuIa6k8voHyVzpW5uBolUBu7O1CvSgPVn2q/y+qrTQ==;"
+                      "mcc-time"           "1532825948"
+                      :Content-Type        "application/json"
+                      :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
+                      :mauth-version       "v2"
+                      }
+   :url              "https://www.mdsol.com/api/v2/testing1"
+   :method           :put
+   :body             "\"{\\\"a\\\":{\\\"b\\\":123}}\""
    :throw-exceptions false
-   :as :auto})
+   :as               :auto})
 
 (def mock-get-v2
-  {:headers {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:VELmFCqhoonHjj53gW0u2k2Ot30TU21CrWuzvIIR6FscCUdLMIRdK63lS3sLizkGH/X3YdlTLu3i67/Iw0SqkD2WzbkDHk00OP2Vf9S5ZLjkrFbkQgd8m4Kf0b1qmepXpHs2rZOnKep2/CIIZCHbitDe07oaNyI0ta+pZ76FKjbdsLS3BEUm5tW12eTlQkibeGuPb0yyso516x7Ya82lva4cTlZkIv4VfnVOtZs72BoL89uQsP7VflkYTP3aHMBZN90h6jjxKfZhF/I5Uo1W42Ci9I6i8SSa3O7g3M4msILxQzreVV0VYLg0ee+Vslu1T7cvXxmy9ZlfMMxf3H6LUg==;"
-             "mcc-time" "1532825948"
-             :Content-Type "application/json"
-             :Authorization "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
-             :mauth-version "v2"
-             }
-   :url "https://www.mdsol.com/api/v2/testing1"
-   :method :get
-   :body "\"\""
+  {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:VELmFCqhoonHjj53gW0u2k2Ot30TU21CrWuzvIIR6FscCUdLMIRdK63lS3sLizkGH/X3YdlTLu3i67/Iw0SqkD2WzbkDHk00OP2Vf9S5ZLjkrFbkQgd8m4Kf0b1qmepXpHs2rZOnKep2/CIIZCHbitDe07oaNyI0ta+pZ76FKjbdsLS3BEUm5tW12eTlQkibeGuPb0yyso516x7Ya82lva4cTlZkIv4VfnVOtZs72BoL89uQsP7VflkYTP3aHMBZN90h6jjxKfZhF/I5Uo1W42Ci9I6i8SSa3O7g3M4msILxQzreVV0VYLg0ee+Vslu1T7cvXxmy9ZlfMMxf3H6LUg==;"
+                      "mcc-time"           "1532825948"
+                      :Content-Type        "application/json"
+                      :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
+                      :mauth-version       "v2"
+                      }
+   :url              "https://www.mdsol.com/api/v2/testing1"
+   :method           :get
+   :body             "\"\""
    :throw-exceptions false
-   :as :auto})
+   :as               :auto})
 
 (def mock-get-with-qs-v2
-  {:headers {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:VELmFCqhoonHjj53gW0u2k2Ot30TU21CrWuzvIIR6FscCUdLMIRdK63lS3sLizkGH/X3YdlTLu3i67/Iw0SqkD2WzbkDHk00OP2Vf9S5ZLjkrFbkQgd8m4Kf0b1qmepXpHs2rZOnKep2/CIIZCHbitDe07oaNyI0ta+pZ76FKjbdsLS3BEUm5tW12eTlQkibeGuPb0yyso516x7Ya82lva4cTlZkIv4VfnVOtZs72BoL89uQsP7VflkYTP3aHMBZN90h6jjxKfZhF/I5Uo1W42Ci9I6i8SSa3O7g3M4msILxQzreVV0VYLg0ee+Vslu1T7cvXxmy9ZlfMMxf3H6LUg==;"             "mcc-time" "1532825948"
-             :Content-Type "application/json"
-             :Authorization "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
-             :mauth-version "v2"
-             }
-   :url "https://www.mdsol.com/api/v2/testing1?testABCD=1234"
-   :method :get
-   :body "\"\""
+  {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:VELmFCqhoonHjj53gW0u2k2Ot30TU21CrWuzvIIR6FscCUdLMIRdK63lS3sLizkGH/X3YdlTLu3i67/Iw0SqkD2WzbkDHk00OP2Vf9S5ZLjkrFbkQgd8m4Kf0b1qmepXpHs2rZOnKep2/CIIZCHbitDe07oaNyI0ta+pZ76FKjbdsLS3BEUm5tW12eTlQkibeGuPb0yyso516x7Ya82lva4cTlZkIv4VfnVOtZs72BoL89uQsP7VflkYTP3aHMBZN90h6jjxKfZhF/I5Uo1W42Ci9I6i8SSa3O7g3M4msILxQzreVV0VYLg0ee+Vslu1T7cvXxmy9ZlfMMxf3H6LUg==;" "mcc-time" "1532825948"
+                      :Content-Type        "application/json"
+                      :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
+                      :mauth-version       "v2"
+                      }
+   :url              "https://www.mdsol.com/api/v2/testing1?testABCD=1234"
+   :method           :get
+   :body             "\"\""
    :throw-exceptions false
-   :as :auto})
+   :as               :auto})
 
 (def mock-delete-v2
-  {:headers {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:rQR2OK8w3ixCyVqMZCxzUcEObaigSLfoHSgiGbONc0MD7GrhZ3rLLefV3nUaf3g/0hQi3Irx07NU+yBNS37Orya8eufqwsod1P2FeutNbHVLFhjTG+D/+StknEemQfzV7ZZ3abejzc02QP2QWn9jUk9sQjhByPcVbxapwnM2JAj5hCKmm1hE5UsJBk6YW59gWpTUPGGkDlp39LZfTV0lDOc402STy5h56FZSd9I92LA78f6ojF2izYlmp6Q+12FjuWARn9bjBPewRk8cKhYUs3fVl4ZEFwMyQM759waX9VASE9e/UCiFZTbZL2tCrvIRFys5FYmTy53A1pYZGjJ7Kw==;"
-             "mcc-time" "1532825948"
-             :Content-Type "application/json"
-             :Authorization "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
-             :mauth-version "v2"
-             }
-   :url "https://www.mdsol.com/api/v2/testing1"
-   :method :delete
-   :body "\"\""
+  {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:rQR2OK8w3ixCyVqMZCxzUcEObaigSLfoHSgiGbONc0MD7GrhZ3rLLefV3nUaf3g/0hQi3Irx07NU+yBNS37Orya8eufqwsod1P2FeutNbHVLFhjTG+D/+StknEemQfzV7ZZ3abejzc02QP2QWn9jUk9sQjhByPcVbxapwnM2JAj5hCKmm1hE5UsJBk6YW59gWpTUPGGkDlp39LZfTV0lDOc402STy5h56FZSd9I92LA78f6ojF2izYlmp6Q+12FjuWARn9bjBPewRk8cKhYUs3fVl4ZEFwMyQM759waX9VASE9e/UCiFZTbZL2tCrvIRFys5FYmTy53A1pYZGjJ7Kw==;"
+                      "mcc-time"           "1532825948"
+                      :Content-Type        "application/json"
+                      :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
+                      :mauth-version       "v2"
+                      }
+   :url              "https://www.mdsol.com/api/v2/testing1"
+   :method           :delete
+   :body             "\"\""
    :throw-exceptions false
-   :as :auto})
+   :as               :auto})
 
-(def additional-headers {:Content-Type "application/json"
+(def additional-headers {:Content-Type  "application/json"
                          :Authorization "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
                          :mauth-version "v2"})
 
@@ -175,68 +175,57 @@
 
 (deftest header-test
   (testing "It should make a valid GET request."
-    (let [creds (get-credentials)]
-      (-> (get! "https://www.mdsol.com" "/api/v2/testing")
-          (= mock-get)
-          is)))
+    (let [creds (get-credentials)
+          get-response (get! "https://www.mdsol.com" "/api/v2/testing")]
+      (is (= mock-get get-response))))
 
   (testing "It should make a valid GET request with a querystring."
-    (let [creds (get-credentials)]
-      (-> (get! "https://www.mdsol.com" "/api/v2/testing?testABCD=1234")
-          (= mock-get-with-qs)
-          is)))
+    (let [creds (get-credentials)
+          get-response (get! "https://www.mdsol.com" "/api/v2/testing?testABCD=1234")]
+      (is (= mock-get-with-qs get-response))))
 
   (testing "It should make a valid POST request."
-    (let [creds (get-credentials)]
-      (-> (post! "https://www.mdsol.com" "/api/v2/testing1" mock-payload)
-          (= mock-post)
-          is)))
+    (let [creds (get-credentials)
+          post-response (post! "https://www.mdsol.com" "/api/v2/testing1" mock-payload)]
+      (is (= mock-post post-response))))
 
   (testing "It should make a valid DELETE request."
-    (let [creds (get-credentials)]
-      (-> (delete! "https://www.mdsol.com" "/api/v2/testing2")
-          (= mock-delete)
-          is)))
+    (let [creds (get-credentials)
+          delete-response (delete! "https://www.mdsol.com" "/api/v2/testing2")]
+      (is (= mock-delete delete-response))))
 
   (testing "It should make a valid PUT request."
-    (let [creds (get-credentials)]
-      (-> (put! "https://www.mdsol.com" "/api/v2/testing3" mock-payload)
-          (= mock-put)
-          is)))
+    (let [creds (get-credentials)
+          put-response (put! "https://www.mdsol.com" "/api/v2/testing3" mock-payload)]
+      (is (= mock-put put-response))))
 
-   (testing "It should make a valid POST request with v2 mauth header"
-            (let [creds (get-credentials)]
-                 (-> (post! "https://www.mdsol.com" "/api/v2/testing1" mock-payload :additional-headers additional-headers
-                            :with-sni? false)
-                     (= mock-post-v2)
-                     is)))
+  (testing "It should make a valid POST request with v2 mauth header"
+    (let [creds (get-credentials)
+          post-response (post! "https://www.mdsol.com" "/api/v2/testing1" mock-payload :additional-headers additional-headers
+                               :with-sni? false)]
+      (is (= mock-post-v2 post-response))))
 
-   (testing "It should make a valid PUT request with v2 mauth header"
-           (let [creds (get-credentials)]
-                 (-> (put! "https://www.mdsol.com" "/api/v2/testing1" mock-payload :additional-headers additional-headers
-                            :with-sni? false)
-                     (= mock-put-v2)
-                     is)))
+  (testing "It should make a valid PUT request with v2 mauth header"
+    (let [creds (get-credentials)
+          put-response (put! "https://www.mdsol.com" "/api/v2/testing1" mock-payload :additional-headers additional-headers
+                             :with-sni? false)]
+      (is (= mock-put-v2 put-response))))
 
-   (testing "It should make a valid GET request with v2 mauth header"
-            (let [creds (get-credentials)]
-                 (-> (get! "https://www.mdsol.com" "/api/v2/testing1" :additional-headers additional-headers
-                           :with-sni? false)
-                     (= mock-get-v2)
-                     is)))
+  (testing "It should make a valid GET request with v2 mauth header"
+    (let [creds (get-credentials)
+          get-response (get! "https://www.mdsol.com" "/api/v2/testing1" :additional-headers additional-headers
+                             :with-sni? false)]
+      (is (= mock-get-v2 get-response))))
 
-   (testing "It should make a valid GET request with query string and with v2 mauth header"
+  (testing "It should make a valid GET request with query string and with v2 mauth header"
 
-            (let [creds (get-credentials)]
-                 (-> (get! "https://www.mdsol.com" "/api/v2/testing1?testABCD=1234" :additional-headers additional-headers
-                           :with-sni? false)
-                     (= mock-get-with-qs-v2)
-                     is)))
+    (let [creds (get-credentials)
+          get-response (get! "https://www.mdsol.com" "/api/v2/testing1?testABCD=1234" :additional-headers additional-headers
+                             :with-sni? false)]
+      (is (= mock-get-with-qs-v2 get-response))))
 
-   (testing "It should make a valid DELETE request with v2 mauth header"
-            (let [creds (get-credentials)]
-                 (-> (delete! "https://www.mdsol.com" "/api/v2/testing1" :additional-headers additional-headers
-                           :with-sni? false)
-                     (= mock-delete-v2)
-                     is)))
-  )
+  (testing "It should make a valid DELETE request with v2 mauth header"
+    (let [creds (get-credentials)
+          delete-response (delete! "https://www.mdsol.com" "/api/v2/testing1" :additional-headers additional-headers
+                                   :with-sni? false)]
+      (is (= mock-delete-v2) delete-response))))

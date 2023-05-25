@@ -3,13 +3,12 @@
             [clojure.java.io :as io]
             [clojure.string :refer [blank?]]
             [jdk.security.Signature :as signature]
-            [jdk.net.URLEncoder :as url-encoder]
             [pem-reader.core :as pem])
   (:use digest)
-    (:import (java.io ByteArrayInputStream)
-      (javax.crypto Cipher KeyGenerator SecretKey)
-      (java.security Security)
-      (org.bouncycastle.jce.provider BouncyCastleProvider)))
+  (:import (java.io ByteArrayInputStream)
+           (javax.crypto Cipher KeyGenerator SecretKey)
+           (java.security Security)
+           (org.bouncycastle.jce.provider BouncyCastleProvider)))
 
 (defn- epoch-seconds []
   (long (/ (System/currentTimeMillis) 1000)))
@@ -50,12 +49,12 @@
 
 (defn build-mauth-headers
   ([verb url body app-uuid private-key]
-    (let [x-mws-time (epoch-seconds)
-          x-mws-authentication (make-mws-auth-string verb url body app-uuid x-mws-time)]
-      {"X-MWS-Authentication" (-> x-mws-authentication
-                                  msg->sha512
-                                  (sign-mauth app-uuid private-key))
-       "X-MWS-Time"           (str x-mws-time)}))
+   (let [x-mws-time (epoch-seconds)
+         x-mws-authentication (make-mws-auth-string verb url body app-uuid x-mws-time)]
+     {"X-MWS-Authentication" (-> x-mws-authentication
+                                 msg->sha512
+                                 (sign-mauth app-uuid private-key))
+      "X-MWS-Time"           (str x-mws-time)}))
   ([status body app-uuid private-key]
    (let [x-mws-time (epoch-seconds)
          x-mws-authentication (make-mws-auth-string-for-response status body app-uuid x-mws-time)]
@@ -65,66 +64,66 @@
       "X-MWS-Time"           (str x-mws-time)})))
 
 (defn get-hex-encoded-digested-string [msg]
-      (msg->sha512 msg))
+  (msg->sha512 msg))
 
 (defn- make-mcc-auth-string [verb url query-param body app-uuid time]
-       (let [ all-params [verb (get-uri url) (get-hex-encoded-digested-string body) app-uuid time query-param]]
-            (clojure.string/join "\n" all-params)))
+  (let [all-params [verb (get-uri url) (get-hex-encoded-digested-string body) app-uuid time query-param]]
+    (clojure.string/join "\n" all-params)))
 
 (defn- make-mcc-auth-string-for-response [status body app-uuid time]
-       (let [all-params [status (get-hex-encoded-digested-string body) app-uuid time]]
-            (clojure.string/join "\n" all-params)))
+  (let [all-params [status (get-hex-encoded-digested-string body) app-uuid time]]
+    (clojure.string/join "\n" all-params)))
 
 (defn keydata [reader]
-      (->> reader
-           (org.bouncycastle.openssl.PEMParser.)
-           (.readObject)))
+  (->> reader
+       (org.bouncycastle.openssl.PEMParser.)
+       (.readObject)))
 
 (defn pem-string->key-pair
-      "Convert a PEM-formatted private key string to a public/private keypair.
-       Returns java.security.KeyPair."
-      [string]
-      (let [bouncy-castle-provider (Security/addProvider (BouncyCastleProvider.))
-            key-data (keydata (io/reader (.getBytes string)))]
-           (.getKeyPair (org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter.) key-data)))
+  "Convert a PEM-formatted private key string to a public/private keypair.
+   Returns java.security.KeyPair."
+  [string]
+  (let [bouncy-castle-provider (Security/addProvider (BouncyCastleProvider.))
+        key-data (keydata (io/reader (.getBytes string)))]
+    (.getKeyPair (org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter.) key-data)))
 
 (defn get-private-key [key-pair]
-      (.getPrivate key-pair))
+  (.getPrivate key-pair))
 
 (defn str->bytes
-      "Convert string to byte array."
-      ([^String s]
-       (str->bytes s "UTF-8"))
-      ([^String s, ^String encoding]
-       (.getBytes s encoding)))
+  "Convert string to byte array."
+  ([^String s]
+   (str->bytes s "UTF-8"))
+  ([^String s, ^String encoding]
+   (.getBytes s encoding)))
 
 (defn encrypt-signature-rsa [private-key-string string-to-sign]
-      (let [signature-instance (signature/*get-instance "SHA256withRSA")
-            key-pair-object (pem-string->key-pair private-key-string)
-            private-key (get-private-key key-pair-object)
-            byte-array-to-sign (str->bytes (String. string-to-sign))]
-           (signature/init-sign signature-instance private-key)
-           (signature/update signature-instance byte-array-to-sign 0 (alength byte-array-to-sign))
-           (->> (signature/sign signature-instance)
-                base64/encode
-                String.
-                (str ""))))
+  (let [signature-instance (signature/*get-instance "SHA256withRSA")
+        key-pair-object (pem-string->key-pair private-key-string)
+        private-key (get-private-key key-pair-object)
+        byte-array-to-sign (str->bytes (String. string-to-sign))]
+    (signature/init-sign signature-instance private-key)
+    (signature/update signature-instance byte-array-to-sign 0 (alength byte-array-to-sign))
+    (->> (signature/sign signature-instance)
+         base64/encode
+         String.
+         (str ""))))
 
-(defn generate-request-headers-v2 [mcc-auth-string-to-sign epoch-time-to-sign app-uuid private-key]
-      (let [encrypted-signature (encrypt-signature-rsa private-key mcc-auth-string-to-sign)
-            mcc-authentication (str "MWSV2" " " app-uuid ":" encrypted-signature ";")]
-           mcc-authentication))
+(defn generate-headers-v2 [mcc-auth-string-to-sign epoch-time-to-sign app-uuid private-key]
+  (let [encrypted-signature (encrypt-signature-rsa private-key mcc-auth-string-to-sign)
+        mcc-authentication (str "MWSV2" " " app-uuid ":" encrypted-signature ";")]
+    mcc-authentication))
 
-(defn build-mauth-headers-v2
-  ([verb url body app-uuid private-key query-param]
-   (let [mcc-time (epoch-seconds)
-         mcc-auth-string-to-sign (make-mcc-auth-string verb url query-param body app-uuid mcc-time)
-         authentication (generate-request-headers-v2 mcc-auth-string-to-sign mcc-time app-uuid private-key)]
-     {"mcc-authentication" authentication
-      "mcc-time"           (str mcc-time)}))
-  ([status body app-uuid private-key]
-   (let [mcc-time (epoch-seconds)
-         mcc-auth-string-to-sign (make-mcc-auth-string-for-response status body app-uuid mcc-time)
-         authentication (generate-request-headers-v2 mcc-auth-string-to-sign mcc-time app-uuid private-key)]
-     {"mcc-authentication" authentication
-      "mcc-time"           (str mcc-time)})))
+(defn build-mauth-headers-v2 [verb url body app-uuid private-key query-param]
+  (let [mcc-time (epoch-seconds)
+        mcc-auth-string-to-sign (make-mcc-auth-string verb url query-param body app-uuid mcc-time)
+        authentication (generate-headers-v2 mcc-auth-string-to-sign mcc-time app-uuid private-key)]
+    {"mcc-authentication" authentication
+     "mcc-time"           (str mcc-time)}))
+
+(defn build-mauth-response-headers-v2 [status body app-uuid private-key]
+  (let [mcc-time (epoch-seconds)
+        mcc-auth-string-to-sign (make-mcc-auth-string-for-response status body app-uuid mcc-time)
+        authentication (generate-headers-v2 mcc-auth-string-to-sign mcc-time app-uuid private-key)]
+    {"mcc-authentication" authentication
+     "mcc-time"           (str mcc-time)}))
