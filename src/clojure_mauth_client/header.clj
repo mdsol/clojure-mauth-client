@@ -109,21 +109,20 @@
          String.
          (str ""))))
 
-(defn generate-headers-v2 [mcc-auth-string-to-sign epoch-time-to-sign app-uuid private-key]
+(defn generate-headers-v2 [mcc-auth-string-to-sign app-uuid private-key]
   (let [encrypted-signature (encrypt-signature-rsa private-key mcc-auth-string-to-sign)
         mcc-authentication (str "MWSV2" " " app-uuid ":" encrypted-signature ";")]
     mcc-authentication))
 
-(defn build-mauth-headers-v2 [verb url body app-uuid private-key query-param]
-  (let [mcc-time (epoch-seconds)
-        mcc-auth-string-to-sign (make-mcc-auth-string verb url query-param body app-uuid mcc-time)
-        authentication (generate-headers-v2 mcc-auth-string-to-sign mcc-time app-uuid private-key)]
-    {"mcc-authentication" authentication
-     "mcc-time"           (str mcc-time)}))
-
-(defn build-mauth-response-headers-v2 [status body app-uuid private-key]
-  (let [mcc-time (epoch-seconds)
-        mcc-auth-string-to-sign (make-mcc-auth-string-for-response status body app-uuid mcc-time)
-        authentication (generate-headers-v2 mcc-auth-string-to-sign mcc-time app-uuid private-key)]
-    {"mcc-authentication" authentication
-     "mcc-time"           (str mcc-time)}))
+(defn build-mauth-headers-v2
+  ([verb-or-status body app-uuid private-key]
+   (build-mauth-headers-v2 verb-or-status nil body app-uuid private-key nil))
+  ([verb-or-status url body app-uuid private-key query-param]
+   (let [mcc-time (epoch-seconds)
+         params-vec (if (instance? java.lang.String verb-or-status)
+                      [verb-or-status (get-uri url) (get-hex-encoded-digested-string body) app-uuid mcc-time query-param]
+                      [verb-or-status (get-hex-encoded-digested-string body) app-uuid mcc-time])
+         all-params-string (clojure.string/join "\n" params-vec)
+         authentication (generate-headers-v2 all-params-string app-uuid private-key)]
+     {"mcc-authentication" authentication
+      "mcc-time"           (str mcc-time)})))
