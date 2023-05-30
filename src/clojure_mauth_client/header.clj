@@ -66,14 +66,6 @@
 (defn get-hex-encoded-digested-string [msg]
   (msg->sha512 msg))
 
-(defn- make-mcc-auth-string [verb url query-param body app-uuid time]
-  (let [all-params [verb (get-uri url) (get-hex-encoded-digested-string body) app-uuid time query-param]]
-    (clojure.string/join "\n" all-params)))
-
-(defn- make-mcc-auth-string-for-response [status body app-uuid time]
-  (let [all-params [status (get-hex-encoded-digested-string body) app-uuid time]]
-    (clojure.string/join "\n" all-params)))
-
 (defn keydata [reader]
   (->> reader
        (org.bouncycastle.openssl.PEMParser.)
