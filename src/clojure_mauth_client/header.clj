@@ -6,9 +6,7 @@
             [pem-reader.core :as pem])
   (:use digest)
   (:import (java.io ByteArrayInputStream)
-           (javax.crypto Cipher KeyGenerator SecretKey)
-           (java.security Security)
-           (org.bouncycastle.jce.provider BouncyCastleProvider)))
+           (javax.crypto Cipher KeyGenerator SecretKey)))
 
 (defn- epoch-seconds []
   (long (/ (System/currentTimeMillis) 1000)))
@@ -66,22 +64,6 @@
 (defn get-hex-encoded-digested-string [msg]
   (msg->sha512 msg))
 
-(defn keydata [reader]
-  (->> reader
-       (org.bouncycastle.openssl.PEMParser.)
-       (.readObject)))
-
-(defn pem-string->key-pair
-  "Convert a PEM-formatted private key string to a public/private keypair.
-   Returns java.security.KeyPair."
-  [string]
-  (let [bouncy-castle-provider (Security/addProvider (BouncyCastleProvider.))
-        key-data (keydata (io/reader (.getBytes string)))]
-    (.getKeyPair (org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter.) key-data)))
-
-(defn get-private-key [key-pair]
-  (.getPrivate key-pair))
-
 (defn str->bytes
   "Convert string to byte array."
   ([^String s]
@@ -91,8 +73,7 @@
 
 (defn encrypt-signature-rsa [private-key-string string-to-sign]
   (let [signature-instance (signature/*get-instance "SHA256withRSA")
-        key-pair-object (pem-string->key-pair private-key-string)
-        private-key (get-private-key key-pair-object)
+        private-key (pem/private-key (read-key private-key-string))
         byte-array-to-sign (str->bytes (String. string-to-sign))]
     (signature/init-sign signature-instance private-key)
     (signature/update signature-instance byte-array-to-sign 0 (alength byte-array-to-sign))
