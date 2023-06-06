@@ -8,8 +8,6 @@
                  [digest "1.4.8"]
                  [org.clojure/data.codec "0.1.1"]
                  [clojure-interop/java.security "1.0.5"]
-                 ;[clojure-interop/java.net "1.0.5"]
-                 ;[org.bouncycastle/bcpkix-jdk15on "1.53"]
                  [http-kit "2.4.0-alpha2"]
                  [clj-http "3.9.1"]
                  [org.clojure/data.json "0.2.6"]
