@@ -3,6 +3,7 @@
             [clj-http.client :as client]
             [clojure.data.json :as json])
   (:use clojure-mauth-client.header
+        clojure-mauth-client.header-v2
         clojure-mauth-client.credentials)
   (:import (javax.net.ssl SSLEngine SNIHostName SSLParameters)
            (java.net URI)))
