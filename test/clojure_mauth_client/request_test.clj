@@ -39,6 +39,7 @@
                         "https://mauth-sandbox.imedidata.net")
 
     (with-redefs [clojure-mauth-client.header/epoch-seconds (fn [] 1532825948)
+                  clojure-mauth-client.header-v2/epoch-seconds (fn [] 1532825948)
                   clj-http.client/request (fn [{:keys [client timeout filter worker-pool keepalive as follow-redirects max-redirects response
                                                        trace-redirects allow-unsafe-redirect-methods proxy-host proxy-port tunnel?]
                                                 :as   opts
