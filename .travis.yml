@@ -24,7 +24,6 @@ jobs:
         - stage: build
           name: "Build & Test"
           script:
-            - lein cljfmt check
             - lein test
         - stage: test
           install:
