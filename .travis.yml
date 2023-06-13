@@ -1,8 +1,45 @@
 language: clojure
 dist: trusty
 
-install:
-  - lein deps
+sudo: required
 
-script:
-  - lein test
+addons:
+      apt:
+        packages:
+          - gzip
+
+
+jdk: openjdk11
+
+stages:
+      - name: test
+        if: branch = develop
+      - name: publish
+        if: tag IS present
+
+cache: bundler
+
+jobs:
+      include:
+        - stage: build
+          name: "Build & Test"
+          script:
+            - lein test
+        - stage: test
+          install:
+            - lein deps
+            - lein pom
+          script:
+            - lein test
+        - stage: publish
+          install:
+            - lein deps
+            - lein pom
+          script: lein test
+          deploy:
+            provider: script
+            script: lein deploy
+            skip_cleanup: true
+            on:
+              tags: true
+              all_branches: true
