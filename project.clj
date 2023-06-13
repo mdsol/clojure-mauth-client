@@ -1,4 +1,4 @@
-(defproject clojure-mauth-client "2.0.0"
+(defproject clojure-mauth-client "2.0.1-SNAPSHOT"
   :description "Clojure Mauth Client"
   :url "https://github.com/mdsol/clojure-mauth-client"
   :license {:name "MIT"
