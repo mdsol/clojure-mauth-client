@@ -1,7 +1,8 @@
 (ns clojure-mauth-client.request-test
   (:require [clojure.test :refer :all]
             [clojure-mauth-client.request :refer :all]
-            [clojure.data.json :as json])
+            [clojure.data.json :as json]
+            [clojure-mauth-client.util :as util])
   (:use [clojure-mauth-client.credentials]))
 
 (use-fixtures
@@ -38,8 +39,7 @@
                         -----END RSA PRIVATE KEY-----"
                         "https://mauth-sandbox.imedidata.net")
 
-    (with-redefs [clojure-mauth-client.header/epoch-seconds (fn [] 1532825948)
-                  clojure-mauth-client.header-v2/epoch-seconds (fn [] 1532825948)
+    (with-redefs [util/epoch-seconds (fn [] 1532825948)
                   clj-http.client/request (fn [{:keys [client timeout filter worker-pool keepalive as follow-redirects max-redirects response
                                                        trace-redirects allow-unsafe-redirect-methods proxy-host proxy-port tunnel?]
                                                 :as   opts

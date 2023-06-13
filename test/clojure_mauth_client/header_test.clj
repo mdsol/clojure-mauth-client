@@ -1,13 +1,14 @@
 (ns clojure-mauth-client.header-test
   (:require [clojure.test :refer :all]
-            [clojure-mauth-client.header :refer :all])
-  (:use [clojure-mauth-client.credentials]))
+            [clojure-mauth-client.header :as header]
+            [clojure-mauth-client.util :as util]
+            [clojure-mauth-client.credentials :as credentials]))
 
 (use-fixtures
   :once
   (fn [f]
     ;Note: these are NOT valid real credentials.
-    (define-credentials "abcd7d78-c874-47d9-a829-ccaa51ae75c9"
+    (credentials/define-credentials "abcd7d78-c874-47d9-a829-ccaa51ae75c9"
                         "-----BEGIN RSA PRIVATE KEY-----
                         MIIEowIBAAKCAQEAsaa4gcNl4jx9YF7Y/6B+v29c0KBs1vxym0p4hwjZl5GteQgR
                         uFW5wM93F2lUFiVEQoM+Ti3AQjEDWdeuOIfo66LgbNLH7B3JhbkwHti/bMsq7T66
@@ -36,19 +37,19 @@
                         e+viqMbgmORJDP/8vbpd0yZjT25ImysJE5cSCGiqHOotDs3jdlUX
                         -----END RSA PRIVATE KEY-----"
                         "https://mauth-sandbox.imedidata.net")
-    (with-redefs [clojure-mauth-client.header/epoch-seconds (fn [] 1532825948)]
+    (with-redefs [util/epoch-seconds (fn [] 1532825948)]
       (f))))
 
 (deftest header-test
   (testing "It should generate a valid mauth X-MWS header for GET"
-    (let [creds (get-credentials)
-          mauth-headers (build-mauth-headers "GET" "https://www.mdsol.com/api/v2/testing" "" (:app-uuid creds) (:private-key creds))]
+    (let [creds (credentials/get-credentials)
+          mauth-headers (header/build-mauth-headers "GET" "https://www.mdsol.com/api/v2/testing" "" (:app-uuid creds) (:private-key creds))]
       (is (= {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:gI/yUeSTbiOWggLvCv2IJP19GFvmlE8RoaUrIpyLE8DY/mCQd8CUPgT9xNHGNqgPGe9f4CZdiFCC79Xvp6seZAq8/CnqA1dsJW6f46scqqTs+4N1TJml6GNCT9xU4tjUyHWFWpCBQlSvpoTFsLSq2d2zas9M9q1sgwPBS/oPGEN1agCQLHZS/Ime4ub8MuXh0Q8aWodqCpVi4GPiap/KLIQEzbvhsdayxmAcs2XDjpt+CReRf3tBCzB1RucVEfBehxtDQGgvrs/UCUbkpq7gY7f2k0RkrH+IopfhYfdNpmCHW12OEQoZ74TVbh61Uo+xcD1der46+tWk0mdnlyXKow=="
               "X-MWS-Time"           "1532825948"}))))
 
   (testing "It should generate a valid mauth X-MWS header for response"
-    (let [creds (get-credentials)
-          mauth-headers (build-mauth-headers 200 "{\"test\":\"testing\"}" (:app-uuid creds) (:private-key creds))]
+    (let [creds (credentials/get-credentials)
+          mauth-headers (header/build-mauth-headers 200 "{\"test\":\"testing\"}" (:app-uuid creds) (:private-key creds))]
       (is (= {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:i0rLrgEN8Jy/M4kA1PNNckUxeGU2pL3PGCOjdhRrC6egHVTvNfJLXveVG/7wAU9H4hpLYsThyV1/LRc/OupBZmKYRDzqD6OneZVLkysehk6/OHKb8j8uJQnBSLB72ooIPPIUxJqtasHCi6cdzkBEZf3omp7qzkinhuX2Wi/t70xfC5YmeTydBoe2d+zcIDJZb6+zON4V5CwGMPlCLK6iFD8+hk9ddhszQZ+siHK8SWxrhrMGRDN9xyp3ljw+f62tlpTZi0KEHAr0M/aq49aP3Iv/XrN88Cl5Tt1nGIWslarfJrAxFNfzofO0KULqFB9nRV1NkBbrSMyjGvea7nGNBw=="
               "X-MWS-Time"           "1532825948"} mauth-headers)))))
 

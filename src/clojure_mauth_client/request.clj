@@ -1,10 +1,10 @@
 (ns clojure-mauth-client.request
   (:require [org.httpkit.client :as http]
             [clj-http.client :as client]
-            [clojure.data.json :as json])
-  (:use clojure-mauth-client.header
-        clojure-mauth-client.header-v2
-        clojure-mauth-client.credentials)
+            [clojure.data.json :as json]
+            [clojure-mauth-client.header :as header]
+            [clojure-mauth-client.header-v2 :as header-v2]
+            [clojure-mauth-client.credentials :as credentials])
   (:import (javax.net.ssl SSLEngine SNIHostName SSLParameters)
            (java.net URI)))
 
@@ -17,14 +17,14 @@
 (defn build-header [mauth-version query-string params]
   (let [params-with-query-string (conj params query-string)]
     (if (or (not (seq mauth-version)) (not (^String .equalsIgnoreCase mauth-version "v2")))
-      (apply build-mauth-headers params)
-      (apply build-mauth-headers-v2 params-with-query-string))))
+      (apply header/build-mauth-headers params)
+      (apply header-v2/build-mauth-headers-v2 params-with-query-string))))
 
 (defn make-request [type base-url uri body & {:keys [additional-headers with-sni? throw-exceptions?]
                                               :or   {additional-headers {}
                                                      with-sni?          nil
                                                      throw-exceptions?  false}}]
-  (let [cred (get-credentials)
+  (let [cred (credentials/get-credentials)
         mauth-version (additional-headers :mauth-version)
         query-params (additional-headers :query-param-string)
         ; Tech debt: test with-sni?=true and modify this code if needed
