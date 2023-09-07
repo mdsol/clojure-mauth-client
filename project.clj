@@ -1,4 +1,4 @@
-(defproject clojure-mauth-client "2.0.2-SNAPSHOT"
+(defproject clojure-mauth-client "2.0.2"
   :description "Clojure Mauth Client"
   :url "https://github.com/mdsol/clojure-mauth-client"
   :license {:name "MIT"
@@ -13,7 +13,7 @@
                  [org.clojure/data.json "0.2.6"]
                  [javax.xml.bind/jaxb-api "2.2.11"]]
 
-  :deploy-repositories [["clojars"
+  :deploy-repositories [["releases"
                          {:url           "https://clojars.org/repo"
                           :sign-releases false
                           :username      :env/CLOJARS_USERNAME
