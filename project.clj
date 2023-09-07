@@ -13,14 +13,11 @@
                  [org.clojure/data.json "0.2.6"]
                  [javax.xml.bind/jaxb-api "2.2.11"]]
 
-  :deploy-repositories [["releases" {:url "https://mdsol.jfrog.io/artifactory/common_clj-maven-prod-local/"
-                                     :sign-releases false
-                                     :username :env/artifactory_username
-                                     :password :env/artifactory_password}
-                         "snapshots" {:url "https://mdsol.jfrog.io/artifactory/common_clj-maven-prod-local/"
-                                      :sign-releases false
-                                      :username :env/artifactory_username
-                                      :password :env/artifactory_password}]]
+  :deploy-repositories [["clojars"
+                         {:url           "https://clojars.org/repo"
+                          :sign-releases false
+                          :username      :env/CLOJARS_USERNAME
+                          :password      :env/CLOJARS_DEPLOY_TOKEN}]]
 
   :release-tasks [["vcs" "assert-committed"]
                   ["change" "version" "leiningen.release/bump-version" "release"]
