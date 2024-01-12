@@ -68,13 +68,16 @@ To do your calls with SNI, pass `:with-sni? true` to your calls.
 For example,
 `(mauth/get! "https://www.mdsol.com" "/api/v2/testing.json" :with-sni? true)`
 
-Version 2.0.1 update -
+Version 2.0.2 update -
 We have added support for mauth version 2 headers as well now. To get the v2 headers you need to add additional header in your request as
 "mauth-version" with value as "v2" and algorithm also uses query param if any to sign  or to generate these headers, so you will need to add additional header in your request as
 "query-param-string"  and value should be string of sorted and encoded query params e.g abc=abctest&test=testing%20value
 you will get the response version 2 headers as below-
 "mcc-authentication" authentication value
 "mcc-time"           mcc-time
+
+Version 2.0.3 update -
+Changed mauth unauthorized error status code from 403 to 401 code which corresponds to the right HTTP status code for Unauthorized.
 
 ## Contributing/ Tests
 Tests can be run using `lein test`.
