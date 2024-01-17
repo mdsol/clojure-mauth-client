@@ -24,7 +24,7 @@
       (if valid?
         (handler (-> request
                      (assoc :body serialized-body)))
-        {:status 403
+        {:status 401
          :body "Unauthorized."}
         )
       )
