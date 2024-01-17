@@ -19,7 +19,7 @@
 
 (deftest test-wrap-mauth-verification
   (testing "Request should get validated successfully"
-           (with-redefs [validate!   (fn [& _] true)]
+           (with-redefs [validate!   (fn [& _] (constantly true))]
              (let [f                     (middleware/wrap-mauth-verification mock-handler)
                    {:keys [status body]} (f mock-post-request)]
                (is (= 200 status))
