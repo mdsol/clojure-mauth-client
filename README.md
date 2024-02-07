@@ -78,6 +78,7 @@ you will get the response version 2 headers as below-
 
 Version 2.0.3 update -
 Changed mauth unauthorized error status code from 403 to 401 code which corresponds to the right HTTP status code for Unauthorized.
+And also changed signature algorithm to SHA512withRSA, previously it was SHA256withRSA.
 
 ## Contributing/ Tests
 Tests can be run using `lein test`.
