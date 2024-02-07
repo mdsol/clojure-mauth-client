@@ -5,7 +5,7 @@
             [clojure-mauth-client.util :as util]))
 
 (defn- encrypt-signature-rsa [private-key-string string-to-sign]
-  (let [signature-instance (signature/*get-instance "SHA256withRSA")
+  (let [signature-instance (signature/*get-instance "SHA512withRSA")
         private-key (pem/private-key (util/read-key private-key-string))
         byte-array-to-sign (util/str->bytes (String. string-to-sign))]
     (signature/init-sign signature-instance private-key)

@@ -45,11 +45,11 @@
   (testing "It should generate a valid mauth MWSV2 header for POST"
     (let [creds (credentials/get-credentials)
           mauth-header-v2 (header-v2/build-mauth-headers-v2 "POST" "https://www.mdsol.com/api/v2/testing" "" (:app-uuid creds) (:private-key creds) "abc=testing&test=1234")]
-      (is (= {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:WG3mMzhcRAm0zYntF8pfYaMjVB3Z9O29XpqvmJ935yZaUTQBjRYVJj2cZo/fU+bMGesMTNLH/aCXLIj9h+h/9ni/hWC2r0C+23qzRpd6JFyy9eFCa1h1JxMrIBSQOC4ESnDl1Wki177TSUYKc43aeM/bJjNBDDtpoazIjGM45G7tSmCNTy+7ORtoubo8W4GTc6hwVA0IhkxCbOjW9iJ40Nruju8BZ9ZSmfO/CfhtkzCEeXnUe542w3AfQMoqnOtDQeZNuU+7xRYMb0L3bSHYRd6WQek7Adk6maAkbCAdXQnAJ+sl78/Sf3yPruSqTwwPuYTPforWv/u3DyhEgXbPjw==;"
+      (is (= {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:nB0sLA13YT3n5HYeuox4iiGTPNrxS0XsgWRNIC51U3Pd0FFTBlbHVO+5URTywg5BAmC3hSruFP6S116ewjJE2lUoNdXSp9gsRt6GZ6Y/QGrd+U54TWKuk13rumiphljb4HdslAOe17ac6nqRxqF/Rd16lK/0nvTpPN4Z1USJ0L0YwJDUpkhaaTsvt6LIeIZjY6wexikZK/q4CvXQDwRmhtdaTICdAMjvbhJ6apnR3e8Ra9I9wmb713DudcBn2uerHuURMywTkqUCZMcH4cF3a8Hi6Lpm85BfzP+9RRzcUJbU5hkzIor58hrsvJv/9WVFGrt8JExnmcWKrgA/rj2X2g==;"
               "mcc-time"           "1532825948"} mauth-header-v2))))
 
   (testing "It should generate a valid mauth MWSV2 header for response"
     (let [creds (credentials/get-credentials)
           mauth-headers-v2 (header-v2/build-mauth-headers-v2 200 "{\"test\":\"testing\"}" (:app-uuid creds) (:private-key creds))]
-      (is (= {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:LFpZhmJRnEoO7/S862U7OhGEFPtMv332pJ0LflJGYBrNRB67XkbTG+/bDDWrF0bWwZ8Z6rJjUhfDUj6xjUoNYlsuQZrVi1x79+uYs/NUasRAp2e4zRnxDCtwzBP6bf/MVxlDUi87Vf4Ko+mXSzGZXRnJVktbOccfNVbvZxUfoq7UxwHsopxJvakQ3ZNZw+G7nxPRwFxEkDuuZGKV0Oq6ujqL+6ydy9RM2Z44J0Tvpf9GXeq0dlWrJDJEULyOM4NrLVPS2m7CJX3rffnUOSbO0UebmS6kRJNgFqKJ58NOAF9bop4S9BUuEdn1k4kt0ol8HZu8rkIyCZSAZIh80opE5g==;"
+      (is (= {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:pTk0Kfs6utta/wixDIwmycbPR5MMPKkU5ETZ+SlUlAMIx2o3sJxMc10ezfdO+z34l47yPIvyFytE+StMkJiLQMDpA9eKl2Xek3QdYL5YBZlG6j1b2lVgF0ptWqxXvQXlv7ets9K6BZ/HGEYj3/3IXzeNRNKYrDCTtGv8JSjdqqpLxSFMlpB++MkjXNlTh2AwIQua5ZTTSpcw8lgxA9PgXQPDeT88bqx2jhsfELG3IG3Sn9DVPOzprsicpVljYHzqjb1+wtNCaD3PYBrkDQZeVd9Y9jU2Hy6CdjnScFQvZlqg043GKQY4OJGvxVUsJDkQHkb7jzLjXfypcvvXHulWDA==;"
               "mcc-time"           "1532825948"} mauth-headers-v2)))))
