@@ -104,7 +104,7 @@
    :as               :auto})
 
 (def mock-post-v2
-  {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:T0XZu8X6bUcKBW/QgX0RnUg0hfbcDfmLrKcQkr2KnO03jFGALsOXpPSAFWgsbP0TvfvwraW7nveyRqXgzDVSFM23kG2bku319Cm5OBtikQHLYZo6BRMZZ+iGvAGh3XEs6dlAlaFLvzvgGn+TFJqbQCbMoeb87UHEif4aLLLIQW3B4GuMFVzU3dqT1jrmte3GBhlEfoKiQiaXMRmEHI+y3rrg7uWSNXLEwmgzygHTRsGD4Mgt8QHd4sprY3M6In/kmPveztAKntFDDteb2YsTck0pyTgh3mi5r0sIEdHcsGhxeO+utgDt3vPUI8QcPvBICuy8BouXVWnDAv6HzQ26og==;"
+  {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:EHrD5j5crMQ2Gv8YrEuZJKpeh0glru9ze+A2a4PoPDVyqz5DSJYmrREqRHVhIn3PrRUwFSECk+cMOH1IMOoiEe0nRg0nRWyZkbPDXfVpnQoq9cZXCmUSGCe5q8WHfqgu+gJCuXflI7n84QAFjxo7Iq+wl8oNC/RSqyqTWXPMF3dtIjiumo5091xhXyqEsUodvOtnYImvTX75pohyHjrrSdsWuVltQmQWjTzYeP4zKNmvznXVMG30BwLLuT97r5/NiyV2h9RbAMyxkGxKzcE56q8e7gddflIQGD/dgxHedcoihCzm5yHSqRFzx/X80LhCSWPlrcCBIUPGDREkUKbFwg==;"
                       "mcc-time"           "1532825948"
                       :Content-Type        "application/json"
                       :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
@@ -117,7 +117,7 @@
    :as               :auto})
 
 (def mock-put-v2
-  {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:JxNEVDUfC2iV2dNZ+p9bbP/efQaDEYvp1Y6LY7svXE+S4uF1sfOBw296iO3/sDYNm/eQz6OY6o+A0ti4L9kBpQgRqbSq6Q673gLEYOMrCswqMCM0uxJ1g95RBADgZVIg0ssjoSBU8lo1OXxjwhxz17PnDN+KTqw10DT2aiecmbhvvMVj3zAxG0vb9xxkIqYEFFkBolLoevriCL5PLqR8o2H1LmJ4eVvnR0HFetZyFEJM9KNxcQ1H8xYM8bZiocjLwPbCBk2IP3MRmgoeosTSgcAVRw7+7QRIpigz4kfc5pxHTuIa6k8voHyVzpW5uBolUBu7O1CvSgPVn2q/y+qrTQ==;"
+  {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:nBKyoJMY5qvumQhLhP0aZr2xe+058aaMuWeP8+fH3MDvxCJTectJsVPO/17wgCwP14yG/EqHK2z8/SrEjMADiOM4QtCTPgcByonCuZzcWW+zSncpssLB3ItC8K7OJ9/urZ60wOxu+0v3Nhl+jYzrVB8fIxq3HELxxIhrq1Bt41BdLNNUTBR2RG6cB2cCHB5sw2bScC1BiuwS73zOkP59Q2uRpsCfdYjWj+u9WvDV1oakUflfjaZHMqsyGMgtMMl6idkR4OejyElyQ/gv4i0dPamR4m+VogMPnlQKyGsqRyXYu1Eo8jpQR+8Mu1pa9Xyu45v18jhOJPlLpF2/1HCp2w==;"
                       "mcc-time"           "1532825948"
                       :Content-Type        "application/json"
                       :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
@@ -130,7 +130,7 @@
    :as               :auto})
 
 (def mock-get-v2
-  {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:VELmFCqhoonHjj53gW0u2k2Ot30TU21CrWuzvIIR6FscCUdLMIRdK63lS3sLizkGH/X3YdlTLu3i67/Iw0SqkD2WzbkDHk00OP2Vf9S5ZLjkrFbkQgd8m4Kf0b1qmepXpHs2rZOnKep2/CIIZCHbitDe07oaNyI0ta+pZ76FKjbdsLS3BEUm5tW12eTlQkibeGuPb0yyso516x7Ya82lva4cTlZkIv4VfnVOtZs72BoL89uQsP7VflkYTP3aHMBZN90h6jjxKfZhF/I5Uo1W42Ci9I6i8SSa3O7g3M4msILxQzreVV0VYLg0ee+Vslu1T7cvXxmy9ZlfMMxf3H6LUg==;"
+  {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:fdWPNlo6rTdMKxw5wf0KpQMKm22Zuf6PIUQRwIYtyzZgNEgJjgjlVdQogSYHTBVuLMx1iuyXH9m/Mex0jzD0DFZh/YIBRQ2Mn1ChKE5T0ejSyLjaTGHFg6sIpCWxVZzUvPKZKTDDdtk12vovGcRWBTfY62LpJpjlcI1YMEwcCL5A7fgIwwX9pxQO/AVJUDA9cowbBpDIjJlo9ZdcdBWfLcKfgPoWtEO5UDpvZZti0rSTiRLY3a0/l8xPLpuQXq9EjUrac0srunEK6te4XQ9MuhEQRYRkTIMF4Hvqxz9HYtkByuvpiSqNfXKCGXGxYhfAFVvRUhmk2RagISwj4qzbUA==;"
                       "mcc-time"           "1532825948"
                       :Content-Type        "application/json"
                       :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
@@ -143,7 +143,7 @@
    :as               :auto})
 
 (def mock-get-with-qs-v2
-  {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:VELmFCqhoonHjj53gW0u2k2Ot30TU21CrWuzvIIR6FscCUdLMIRdK63lS3sLizkGH/X3YdlTLu3i67/Iw0SqkD2WzbkDHk00OP2Vf9S5ZLjkrFbkQgd8m4Kf0b1qmepXpHs2rZOnKep2/CIIZCHbitDe07oaNyI0ta+pZ76FKjbdsLS3BEUm5tW12eTlQkibeGuPb0yyso516x7Ya82lva4cTlZkIv4VfnVOtZs72BoL89uQsP7VflkYTP3aHMBZN90h6jjxKfZhF/I5Uo1W42Ci9I6i8SSa3O7g3M4msILxQzreVV0VYLg0ee+Vslu1T7cvXxmy9ZlfMMxf3H6LUg==;" "mcc-time" "1532825948"
+  {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:fdWPNlo6rTdMKxw5wf0KpQMKm22Zuf6PIUQRwIYtyzZgNEgJjgjlVdQogSYHTBVuLMx1iuyXH9m/Mex0jzD0DFZh/YIBRQ2Mn1ChKE5T0ejSyLjaTGHFg6sIpCWxVZzUvPKZKTDDdtk12vovGcRWBTfY62LpJpjlcI1YMEwcCL5A7fgIwwX9pxQO/AVJUDA9cowbBpDIjJlo9ZdcdBWfLcKfgPoWtEO5UDpvZZti0rSTiRLY3a0/l8xPLpuQXq9EjUrac0srunEK6te4XQ9MuhEQRYRkTIMF4Hvqxz9HYtkByuvpiSqNfXKCGXGxYhfAFVvRUhmk2RagISwj4qzbUA==;" "mcc-time" "1532825948"
                       :Content-Type        "application/json"
                       :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
                       :mauth-version       "v2"
