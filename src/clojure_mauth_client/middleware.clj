@@ -4,11 +4,10 @@
 
 (defn- downcase-header-keys [headers]
   (reduce
-    (fn[r [k v]]
-      (-> r
-          (merge {(-> (name k) lower-case) v}))
-      ) {} headers)
-  )
+   (fn [r [k v]]
+     (-> r
+         (merge {(-> (name k) lower-case) v})))
+   {} headers))
 
 (defn wrap-mauth-verification [handler]
   (fn[request]
@@ -29,8 +28,4 @@
         (handler (-> request
                      (assoc :body serialized-body)))
         {:status 401
-         :body "Unauthorized."}
-        )
-      )
-    )
-  )
+         :body "Unauthorized."}))))
