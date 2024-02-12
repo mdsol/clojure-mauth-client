@@ -4,11 +4,10 @@
   (:use clojure-mauth-client.validate))
 
 (defn- downcase-header-keys [headers]
-  (reduce
-   (fn [r [k v]]
-     (-> r
-         (merge {(-> (name k) lower-case) v})))
-   {} headers))
+  (reduce-kv
+    (fn [m k v]
+      (assoc m (lower-case (name k)) v))
+    {} headers))
 
 (defn wrap-mauth-verification [handler]
   (fn[request]
