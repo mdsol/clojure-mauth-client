@@ -19,11 +19,11 @@
 
     (testing "testing validate with mauth v1 version"
              (let [{:keys [verb url body time v1-signature]} (request-data)]
-               (is (= true (validate! verb url body time v1-signature)))))
+               (is (true? (validate! verb url body time v1-signature)))))
 
     (testing "testing validate with mauth v2 version"
              (let [{:keys [verb url body time v2-signature]} (request-data)]
-               (is (= true (validate! verb url body time v2-signature "v2")))))))
+               (is (true? (validate! verb url body time v2-signature "v2")))))))
 
 (deftest test-validate-failure
   (with-redefs [post!           (fn [& args]
@@ -32,8 +32,8 @@
 
     (testing "testing validate with mauth v1 version"
              (let [{:keys [verb url body time v1-signature]} (request-data)]
-               (is (= false (validate! verb url body time v1-signature)))))
+               (is (false? (validate! verb url body time v1-signature)))))
 
     (testing "testing validate with mauth v2 version"
              (let [{:keys [verb url body time v2-signature]} (request-data)]
-               (is (= false (validate! verb url body time v2-signature "v2")))))))
+               (is (false? (validate! verb url body time v2-signature "v2")))))))

@@ -32,22 +32,22 @@
 (deftest test-wrap-mauth-verification
   (testing "Request should get validated successfully"
            (with-redefs [validate!   (fn [& _] (constantly true))]
-             (let [f                     (middleware/wrap-mauth-verification mock-handler)
-                   {:keys [status body]} (f mock-post-request-v2)]
+             (let [request-function      (middleware/wrap-mauth-verification mock-handler)
+                   {:keys [status body]} (request-function mock-post-request-v2)]
                (is (= 200 status))
                (is (= "\"{\"test\":{\"response\":12345}}\"" body)))))
 
   (testing "Request should get invalidated and should return Unauthorized with 401 error code with v2"
            (with-redefs [validate!   (fn [& _] false)]
-             (let [f                     (middleware/wrap-mauth-verification mock-handler)
-                   {:keys [status body]} (f mock-post-request-v2)]
+             (let [request-function      (middleware/wrap-mauth-verification mock-handler)
+                   {:keys [status body]} (request-function mock-post-request-v2)]
                (is (= 401 status))
                (is (= "Unauthorized." body)))))
 
   (testing "Request should get invalidated and should return Unauthorized with 401 error code with v1"
            (with-redefs [validate!   (fn [& _] false)]
-             (let [f                     (middleware/wrap-mauth-verification mock-handler)
-                   {:keys [status body]} (f mock-post-request-v1)]
+             (let [request-function      (middleware/wrap-mauth-verification mock-handler)
+                   {:keys [status body]} (request-function mock-post-request-v1)]
                (is (= 401 status))
                (is (= "Unauthorized." body)))))
 
@@ -55,14 +55,14 @@
            (with-redefs  [post! (fn [& args]
                                   {:status 204})
                           get-credentials (constantly {:mauth-service-url "http://test.com"})]
-             (let [f                     (middleware/wrap-mauth-verification mock-handler)
-                   {:keys [status body]} (f mock-post-request-v2)]
+             (let [request-function      (middleware/wrap-mauth-verification mock-handler)
+                   {:keys [status body]} (request-function mock-post-request-v2)]
                (is (= 200 status)))))
 
   (testing "Request should get validated as per v1 version"
            (with-redefs  [post! (fn [& args]
                                   {:status 204})
                           get-credentials (constantly {:mauth-service-url "http://test.com"})]
-             (let [f                     (middleware/wrap-mauth-verification mock-handler)
-                   {:keys [status body]} (f mock-post-request-v1)]
+             (let [request-function      (middleware/wrap-mauth-verification mock-handler)
+                   {:keys [status body]} (request-function mock-post-request-v1)]
                (is (= 200 status))))))

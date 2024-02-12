@@ -1,5 +1,6 @@
 (ns clojure-mauth-client.middleware
-  (:require [clojure.string :refer [lower-case]])
+  (:require [clojure.string :refer [lower-case]]
+            [clojure.data.json :as json])
   (:use clojure-mauth-client.validate))
 
 (defn- downcase-header-keys [headers]
@@ -16,6 +17,7 @@
            body :body} request
           serialized-body (cond (nil? body) ""
                                 (string? body) body
+                                (map? body) (json/write-str body)
                                 :else (slurp body))
           headers (-> (:headers request)
                       downcase-header-keys)
