@@ -4,7 +4,7 @@
 
 Leiningen/Boot Coords:
 
-```[clojure-mauth-client "2.0.1"]```
+```[clojure-mauth-client "2.0.4"]```
 
 Here it is folks, a nice, clean MAuth client done in the simplest and most minimal way possible, for your Clojure application.
 
@@ -79,6 +79,9 @@ you will get the response version 2 headers as below-
 Version 2.0.3 update -
 Changed mauth unauthorized error status code from 403 to 401 code which corresponds to the right HTTP status code for Unauthorized.
 And also changed signature algorithm to SHA512withRSA, previously it was SHA256withRSA.
+
+Version 2.0.4 update -
+With this version we have added support to validate mauth requests with v2 version and validating mcc-time and mcc-authentication headers.
 
 ## Contributing/ Tests
 Tests can be run using `lein test`.

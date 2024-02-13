@@ -8,15 +8,13 @@
 (def ^{:private true} auth-uri "/mauth/v1/authentication_tickets.json")
 
 (defn- build-auth-ticket-body [verb app-uuid request-url body time signature]
-  (-> {:authentication_ticket
+  {:authentication_ticket
        {:app_uuid app-uuid
         :verb verb
         :request_url request-url
         :b64encoded_body (String. (encode (.getBytes body)))
         :request_time time
-        :client_signature signature}}
-      json/write-str)
-  )
+        :client_signature signature}})
 
 (defn- signature-map [msg]
   (let [signature msg
@@ -24,14 +22,21 @@
     (if (nil? signature) {}
       (zipmap [:token :app-uuid :signature] (values-fn (trim signature))))))
 
-(defn validate! [verb uri body time signature]
-  (let [creds (get-credentials)
-        sig (signature-map signature)]
-    (-> (post! (:mauth-service-url creds)
-           auth-uri
-           (build-auth-ticket-body verb (:app-uuid sig) uri body time (:signature sig))
-               :additional-headers {"Content-Type" "application/json"})
-      :status
-      (= 204))
-    )
-  )
+(defn validate!
+  ([verb uri body time signature]
+   (validate! verb uri body time signature nil))
+  ([verb uri body time signature mauth-version]
+   (let [creds            (get-credentials)
+         sig              (signature-map signature)
+         auth-body        (build-auth-ticket-body verb (:app-uuid sig) uri body time (:signature sig))
+         updated-body     (if (= mauth-version "v2")
+                            (assoc-in auth-body [:authentication_ticket :token] (:token sig))
+                            auth-body)
+         auth-ticket-body (json/write-str updated-body)]
+     (->
+       (post! (:mauth-service-url creds)
+              auth-uri
+              auth-ticket-body
+              :additional-headers {"Content-Type" "application/json"})
+       :status
+       (= 204)))))
