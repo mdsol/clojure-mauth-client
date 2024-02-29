@@ -20,10 +20,9 @@
                                 :else (slurp body))
           headers (-> (:headers request)
                       downcase-header-keys)
-          version (get headers "mauth-version")
-          [mauth-time mauth-auth mauth-version] (if (= version "v2")
-                                    [(get headers "mcc-time") (get headers "mcc-authentication") "v2"]
-                                    [(get headers "x-mws-time") (get headers "x-mws-authentication") "v1"])
+          [mauth-time mauth-auth mauth-version] (if (every? headers ["mcc-time" "mcc-authentication"])
+                                                  [(get headers "mcc-time") (get headers "mcc-authentication") "v2"]
+                                                  [(get headers "x-mws-time") (get headers "x-mws-authentication") "v1"])
           valid?  (validate! (.toUpperCase (name method)) uri serialized-body mauth-time mauth-auth mauth-version)]
       (if valid?
         (handler (-> request
