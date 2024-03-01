@@ -23,6 +23,13 @@
    :request-method :post
    :body           "\"{\"test\":{\"request\":123}}\""})
 
+(def mock-post-request-without-mauth-headers
+  {:headers        {:Content-Type        "application/json"
+                    :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"}
+   :url            "https://www.mdsol.com/api/v1/testing"
+   :request-method :post
+   :body           "\"{\"test\":{\"request\":123}}\""})
+
 (defn mock-handler [{:keys [body] :as request}]
   {:body   body
    :status 200})
@@ -63,4 +70,9 @@
                           get-credentials (constantly {:mauth-service-url "http://test.com"})]
              (let [request-function      (middleware/wrap-mauth-verification mock-handler)
                    {:keys [status body]} (request-function mock-post-request-v1)]
-               (is (= 200 status))))))
+               (is (= 200 status)))))
+
+  (testing "Exception should be thrown with message as no auth headers sent"
+           (let [request-function      (middleware/wrap-mauth-verification mock-handler)]
+             (is (thrown-with-msg? clojure.lang.ExceptionInfo #"No Mauth headers found"
+                        (request-function mock-post-request-without-mauth-headers))))))

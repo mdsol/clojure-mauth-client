@@ -20,9 +20,20 @@
                                 :else (slurp body))
           headers (-> (:headers request)
                       downcase-header-keys)
-          [mauth-time mauth-auth mauth-version] (if (every? headers ["mcc-time" "mcc-authentication"])
-                                                  [(get headers "mcc-time") (get headers "mcc-authentication") "v2"]
-                                                  [(get headers "x-mws-time") (get headers "x-mws-authentication") "v1"])
+          [mauth-time mauth-auth mauth-version] (cond
+                                                  (every? headers
+                                                          ["mcc-time"
+                                                           "mcc-authentication"])     [(get headers "mcc-time")
+                                                                                       (get headers "mcc-authentication")
+                                                                                       "v2"]
+                                                  (every? headers
+                                                          ["x-mws-time"
+                                                           "x-mws-authentication"])   [(get headers "x-mws-time")
+                                                                                       (get headers "x-mws-authentication")
+                                                                                       "v1"]
+                                                  :else                               (throw
+                                                                                        (ex-info "No Mauth headers found"
+                                                                                                 {:header-names (sort (keys headers))})))
           valid?  (validate! (.toUpperCase (name method)) uri serialized-body mauth-time mauth-auth mauth-version)]
       (if valid?
         (handler (-> request
