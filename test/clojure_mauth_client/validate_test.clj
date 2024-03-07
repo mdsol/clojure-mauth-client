@@ -12,6 +12,14 @@
    :v1-signature "MWS a5a733c5-2bae-400c-aae9-6bb5b99d4130:SpjzqMFJ0cl8Lvi72TcU1qfVP9rzRWH/Jys2g==;"
    :v2-signature "MWSV2 a5a733c5-2bae-400c-aae9-6bb5b99d4130:T0XZu8X6bUcKBW/QgX0RnUg0hfbcDfm==;"})
 
+(defn- request-data-with-invalid-token []
+  {:verb         (.toUpperCase (name :post))
+   :url          "https://www.mdsol.com/api/v1/testing"
+   :body         "\"{\"test\":{\"request\":123}}\""
+   :time         "1532825948"
+   :v1-signature "MWS a5a733c5-2bae-400c-aae9-6bb5b99d4130:SpjzqMFJ0cl8Lvi72TcU1qfVP9rzRWH/Jys2g==;"
+   :v2-signature "MWSV a5a733c5-2bae-400c-aae9-6bb5b99d4130:T0XZu8X6bUcKBW/QgX0RnUg0hfbcDfm==;"})
+
 (deftest test-validate-success
   (with-redefs [post!           (fn [& args]
                                   {:status 204})
@@ -36,4 +44,9 @@
 
     (testing "testing validate with mauth v2 version"
              (let [{:keys [verb url body time v2-signature]} (request-data)]
-               (is (false? (validate! verb url body time v2-signature "v2")))))))
+               (is (false? (validate! verb url body time v2-signature "v2")))))
+
+    (testing "testing validate with mauth v2 version but invalid token"
+             (let [{:keys [verb url body time v2-signature]} (request-data-with-invalid-token)]
+               (is (thrown-with-msg? clojure.lang.ExceptionInfo #"Invalid token found in v2 signature,it should be MWSV2"
+                                     (validate! verb url body time v2-signature "v2")))))))

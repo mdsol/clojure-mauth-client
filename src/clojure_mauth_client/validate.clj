@@ -30,7 +30,11 @@
          sig              (signature-map signature)
          auth-body        (build-auth-ticket-body verb (:app-uuid sig) uri body time (:signature sig))
          updated-body     (if (= mauth-version "v2")
-                            (assoc-in auth-body [:authentication_ticket :token] (:token sig))
+                            (if (= (:token sig) "MWSV2")
+                              (assoc-in auth-body [:authentication_ticket :token] (:token sig))
+                              (throw
+                                (ex-info "Invalid token found in v2 signature,it should be MWSV2"
+                                         {:token (:token sig)})))
                             auth-body)
          auth-ticket-body (json/write-str updated-body)]
      (->
