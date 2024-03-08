@@ -12,14 +12,6 @@
    :v1-signature "MWS a5a733c5-2bae-400c-aae9-6bb5b99d4130:SpjzqMFJ0cl8Lvi72TcU1qfVP9rzRWH/Jys2g==;"
    :v2-signature "MWSV2 a5a733c5-2bae-400c-aae9-6bb5b99d4130:T0XZu8X6bUcKBW/QgX0RnUg0hfbcDfm==;"})
 
-(defn- request-data-with-invalid-token []
-  {:verb         (.toUpperCase (name :post))
-   :url          "https://www.mdsol.com/api/v1/testing"
-   :body         "\"{\"test\":{\"request\":123}}\""
-   :time         "1532825948"
-   :v1-signature "MWS a5a733c5-2bae-400c-aae9-6bb5b99d4130:SpjzqMFJ0cl8Lvi72TcU1qfVP9rzRWH/Jys2g==;"
-   :v2-signature "MWSV a5a733c5-2bae-400c-aae9-6bb5b99d4130:T0XZu8X6bUcKBW/QgX0RnUg0hfbcDfm==;"})
-
 (deftest test-validate-success
   (with-redefs [post!           (fn [& args]
                                   {:status 204})
