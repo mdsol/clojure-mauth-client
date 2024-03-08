@@ -30,6 +30,15 @@
    :request-method :post
    :body           "\"{\"test\":{\"request\":123}}\""})
 
+(def mock-post-request-v2-with-invalid-signature
+  {:headers        {"mcc-authentication" "MWSV abcd7d78-c874-47d9-a829-ccaa51ae75c9:T0XZu8X6bUcKBW/QgX0RnUg0hfbcDfm==;"
+                    "mcc-time"           "1532825948"
+                    :Content-Type        "application/json"
+                    :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"}
+   :url            "https://www.mdsol.com/api/v2/testing"
+   :request-method :post
+   :body           "\"{\"test\":{\"request\":123}}\""})
+
 (defn mock-handler [{:keys [body] :as request}]
   {:body   body
    :status 200})
@@ -75,4 +84,9 @@
   (testing "Exception should be thrown with message as no auth headers sent"
            (let [request-function      (middleware/wrap-mauth-verification mock-handler)]
              (is (thrown-with-msg? clojure.lang.ExceptionInfo #"No Mauth headers found"
-                        (request-function mock-post-request-without-mauth-headers))))))
+                        (request-function mock-post-request-without-mauth-headers)))))
+
+  (testing "Exception should be thrown with message as Mauth signature is not valid"
+           (let [request-function      (middleware/wrap-mauth-verification mock-handler)]
+             (is (thrown-with-msg? clojure.lang.ExceptionInfo #"Mauth signature is not valid"
+                                   (request-function mock-post-request-v2-with-invalid-signature))))))

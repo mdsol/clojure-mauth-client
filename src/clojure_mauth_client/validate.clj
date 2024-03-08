@@ -16,7 +16,7 @@
         :request_time time
         :client_signature signature}})
 
-(defn- signature-map [msg]
+(defn signature-map [msg]
   (let [signature msg
         values-fn (fn [s] (rest (re-find #"\A(\S+)\s*([^:]+):([^:]+)\z" s)))]
     (if (nil? signature) {}
@@ -30,11 +30,7 @@
          sig              (signature-map signature)
          auth-body        (build-auth-ticket-body verb (:app-uuid sig) uri body time (:signature sig))
          updated-body     (if (= mauth-version "v2")
-                            (if (= (:token sig) "MWSV2")
-                              (assoc-in auth-body [:authentication_ticket :token] (:token sig))
-                              (throw
-                                (ex-info "Invalid token found in v2 signature,it should be MWSV2"
-                                         {:token (:token sig)})))
+                            (assoc-in auth-body [:authentication_ticket :token] (:token sig))
                             auth-body)
          auth-ticket-body (json/write-str updated-body)]
      (->

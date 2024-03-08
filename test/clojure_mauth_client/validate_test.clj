@@ -44,9 +44,4 @@
 
     (testing "testing validate with mauth v2 version"
              (let [{:keys [verb url body time v2-signature]} (request-data)]
-               (is (false? (validate! verb url body time v2-signature "v2")))))
-
-    (testing "testing validate with mauth v2 version but invalid token"
-             (let [{:keys [verb url body time v2-signature]} (request-data-with-invalid-token)]
-               (is (thrown-with-msg? clojure.lang.ExceptionInfo #"Invalid token found in v2 signature,it should be MWSV2"
-                                     (validate! verb url body time v2-signature "v2")))))))
+               (is (false? (validate! verb url body time v2-signature "v2")))))))
