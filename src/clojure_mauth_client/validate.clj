@@ -16,7 +16,7 @@
         :request_time time
         :client_signature signature}})
 
-(defn- signature-map [msg]
+(defn signature-map [msg]
   (let [signature msg
         values-fn (fn [s] (rest (re-find #"\A(\S+)\s*([^:]+):([^:]+)\z" s)))]
     (if (nil? signature) {}

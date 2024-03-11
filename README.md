@@ -4,7 +4,7 @@
 
 Leiningen/Boot Coords:
 
-```[clojure-mauth-client "2.0.4"]```
+```[clojure-mauth-client "2.0.5"]```
 
 Here it is folks, a nice, clean MAuth client done in the simplest and most minimal way possible, for your Clojure application.
 
@@ -82,6 +82,10 @@ And also changed signature algorithm to SHA512withRSA, previously it was SHA256w
 
 Version 2.0.4 update -
 With this version we have added support to validate mauth requests with v2 version and validating mcc-time and mcc-authentication headers.
+
+Version 2.0.5 update -
+With this version we have removed dependency of extra header "mauth-version" that we needed to validate mauth requests with v2 version. 
+No need to send this extra header to validate v2 version requests.
 
 ## Contributing/ Tests
 Tests can be run using `lein test`.

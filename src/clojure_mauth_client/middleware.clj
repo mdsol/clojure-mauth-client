@@ -20,10 +20,25 @@
                                 :else (slurp body))
           headers (-> (:headers request)
                       downcase-header-keys)
-          version (get headers "mauth-version")
-          [mauth-time mauth-auth mauth-version] (if (= version "v2")
-                                    [(get headers "mcc-time") (get headers "mcc-authentication") "v2"]
-                                    [(get headers "x-mws-time") (get headers "x-mws-authentication") "v1"])
+          [mauth-time mauth-auth] (cond
+                                                  (every? headers
+                                                          ["mcc-time"
+                                                           "mcc-authentication"])     [(get headers "mcc-time")
+                                                                                       (get headers "mcc-authentication")]
+                                                  (every? headers
+                                                          ["x-mws-time"
+                                                           "x-mws-authentication"])   [(get headers "x-mws-time")
+                                                                                       (get headers "x-mws-authentication")]
+                                                  :else                               (throw
+                                                                                        (ex-info "No Mauth headers found"
+                                                                                                 {:header-names (sort (keys headers))})))
+          mauth-version (let [signature (signature-map mauth-auth)
+                              token     (:token signature)]
+                          (cond
+                            (= token "MWSV2")                   "v2"
+                            (= token "MWS")                     "v1"
+                            :else                               (throw
+                                                                  (ex-info "Mauth signature is not valid" {:signature mauth-auth}))))
           valid?  (validate! (.toUpperCase (name method)) uri serialized-body mauth-time mauth-auth mauth-version)]
       (if valid?
         (handler (-> request

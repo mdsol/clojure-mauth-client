@@ -9,8 +9,7 @@
   {:headers        {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:T0XZu8X6bUcKBW/QgX0RnUg0hfbcDfm==;"
                     "mcc-time"           "1532825948"
                     :Content-Type        "application/json"
-                    :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
-                    :mauth-version       "v2"}
+                    :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"}
    :url            "https://www.mdsol.com/api/v2/testing"
    :request-method :post
    :body           "\"{\"test\":{\"request\":123}}\""})
@@ -19,14 +18,29 @@
   {:headers        {"x-mws-authentication" "MWS a5a733c5-2bae-400c-aae9-6bb5b99d4130:SpjzqMFJ0cl8Lvi72TcU1qfVP9rzRWH/Jys2g==;"
                     "x-mws-time"           "1532825948"
                     :Content-Type        "application/json"
-                    :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
-                    :mauth-version       "v1"}
+                    :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"}
    :url            "https://www.mdsol.com/api/v1/testing"
    :request-method :post
    :body           "\"{\"test\":{\"request\":123}}\""})
 
-(defn mock-handler [request]
-  {:body   "\"{\"test\":{\"response\":12345}}\""
+(def mock-post-request-without-mauth-headers
+  {:headers        {:Content-Type        "application/json"
+                    :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"}
+   :url            "https://www.mdsol.com/api/v1/testing"
+   :request-method :post
+   :body           "\"{\"test\":{\"request\":123}}\""})
+
+(def mock-post-request-v2-with-invalid-signature
+  {:headers        {"mcc-authentication" "MWSV abcd7d78-c874-47d9-a829-ccaa51ae75c9:T0XZu8X6bUcKBW/QgX0RnUg0hfbcDfm==;"
+                    "mcc-time"           "1532825948"
+                    :Content-Type        "application/json"
+                    :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"}
+   :url            "https://www.mdsol.com/api/v2/testing"
+   :request-method :post
+   :body           "\"{\"test\":{\"request\":123}}\""})
+
+(defn mock-handler [{:keys [body] :as request}]
+  {:body   body
    :status 200})
 
 (deftest test-wrap-mauth-verification
@@ -35,7 +49,7 @@
              (let [request-function      (middleware/wrap-mauth-verification mock-handler)
                    {:keys [status body]} (request-function mock-post-request-v2)]
                (is (= 200 status))
-               (is (= "\"{\"test\":{\"response\":12345}}\"" body)))))
+               (is (= "\"{\"test\":{\"request\":123}}\"" body)))))
 
   (testing "Request should get invalidated and should return Unauthorized with 401 error code with v2"
            (with-redefs [validate!   (fn [& _] false)]
@@ -65,4 +79,14 @@
                           get-credentials (constantly {:mauth-service-url "http://test.com"})]
              (let [request-function      (middleware/wrap-mauth-verification mock-handler)
                    {:keys [status body]} (request-function mock-post-request-v1)]
-               (is (= 200 status))))))
+               (is (= 200 status)))))
+
+  (testing "Exception should be thrown with message as no auth headers sent"
+           (let [request-function      (middleware/wrap-mauth-verification mock-handler)]
+             (is (thrown-with-msg? clojure.lang.ExceptionInfo #"No Mauth headers found"
+                        (request-function mock-post-request-without-mauth-headers)))))
+
+  (testing "Exception should be thrown with message as Mauth signature is not valid"
+           (let [request-function      (middleware/wrap-mauth-verification mock-handler)]
+             (is (thrown-with-msg? clojure.lang.ExceptionInfo #"Mauth signature is not valid"
+                                   (request-function mock-post-request-v2-with-invalid-signature))))))
