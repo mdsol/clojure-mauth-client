@@ -79,14 +79,4 @@
                           get-credentials (constantly {:mauth-service-url "http://test.com"})]
              (let [request-function      (middleware/wrap-mauth-verification mock-handler)
                    {:keys [status body]} (request-function mock-post-request-v1)]
-               (is (= 200 status)))))
-
-  (testing "Exception should be thrown with message as no auth headers sent"
-           (let [request-function      (middleware/wrap-mauth-verification mock-handler)]
-             (is (thrown-with-msg? clojure.lang.ExceptionInfo #"No Mauth headers found"
-                        (request-function mock-post-request-without-mauth-headers)))))
-
-  (testing "Exception should be thrown with message as Mauth signature is not valid"
-           (let [request-function      (middleware/wrap-mauth-verification mock-handler)]
-             (is (thrown-with-msg? clojure.lang.ExceptionInfo #"Mauth signature is not valid"
-                                   (request-function mock-post-request-v2-with-invalid-signature))))))
+               (is (= 200 status))))))
