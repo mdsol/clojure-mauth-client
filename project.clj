@@ -11,7 +11,8 @@
                  [http-kit "2.4.0-alpha2"]
                  [clj-http "3.13.0"]
                  [org.clojure/data.json "2.5.0"]
-                 [javax.xml.bind/jaxb-api "2.3.1"]]
+                 [javax.xml.bind/jaxb-api "2.3.1"]
+                 [com.mdsol/mauth-signer "16.0.0"]]
 
   :deploy-repositories [["releases"
                          {:url           "https://clojars.org/repo"
