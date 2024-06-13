@@ -11,3 +11,6 @@ pom.xml.asc
 .hg/
 *.iml
 .idea/
+.clj-kondo/.cache/
+.lsp/.cache/
+.calva/
