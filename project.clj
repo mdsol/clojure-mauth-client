@@ -3,15 +3,15 @@
   :url "https://github.com/mdsol/clojure-mauth-client"
   :license {:name "MIT"
             :url "https://opensource.org/licenses/MIT"}
-  :dependencies [[org.clojure/clojure "1.11.1"]
+  :dependencies [[org.clojure/clojure "1.11.3"]
                  [xsc/pem-reader "0.1.1"]
-                 [digest "1.4.8"]
+                 [digest "1.4.10"]
                  [org.clojure/data.codec "0.1.1"]
                  [clojure-interop/java.security "1.0.5"]
                  [http-kit "2.4.0-alpha2"]
-                 [clj-http "3.9.1"]
-                 [org.clojure/data.json "0.2.6"]
-                 [javax.xml.bind/jaxb-api "2.2.11"]]
+                 [clj-http "3.13.0"]
+                 [org.clojure/data.json "2.5.0"]
+                 [javax.xml.bind/jaxb-api "2.3.1"]]
 
   :deploy-repositories [["releases"
                          {:url           "https://clojars.org/repo"

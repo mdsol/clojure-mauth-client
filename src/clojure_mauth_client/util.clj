@@ -4,10 +4,12 @@
   (:use digest)
   (:import (java.io ByteArrayInputStream)))
 
+(set! *warn-on-reflection* true)
+
 (defn epoch-seconds []
   (long (/ (System/currentTimeMillis) 1000)))
 
-(defn msg->sha512 [msg]
+(defn msg->sha512 [^String msg]
   (-> msg
       .getBytes
       sha-512))
@@ -18,7 +20,7 @@
       .getPath
       (#(if (blank? %) "/" %))))
 
-(defn read-key [key-str]
+(defn read-key [^String key-str]
   (-> key-str
       .getBytes
       ByteArrayInputStream.
@@ -33,4 +35,3 @@
    (str->bytes s "UTF-8"))
   ([^String s, ^String encoding]
    (.getBytes s encoding)))
-
