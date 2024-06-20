@@ -4,7 +4,7 @@
 
 Leiningen/Boot Coords:
 
-```[clojure-mauth-client "2.0.6"]```
+```[clojure-mauth-client "2.0.7"]```
 
 Here it is folks, a nice, clean MAuth client done in the simplest and most minimal way possible, for your Clojure application.
 
@@ -89,6 +89,9 @@ No need to send this extra header to validate v2 version requests.
 
 Version 2.0.6 update -
 With this version we have removed throwing exceptions when not valid mauth headers keys are added or no valid token passed in signature.
+
+Version 2.0.7 update-
+Updated few of the library versions to remove vulnerability
 
 ## Contributing/ Tests
 Tests can be run using `lein test`.
