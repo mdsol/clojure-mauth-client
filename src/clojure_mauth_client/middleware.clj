@@ -13,7 +13,8 @@
   (fn[request]
     (let [{method :request-method
            uri :uri
-           body :body} request
+           body :body
+           query-string :query-string} request
           serialized-body (cond (nil? body) ""
                                 (string? body) body
                                 (map? body) (json/write-str body)
@@ -34,7 +35,7 @@
                           (cond
                             (= token "MWSV2")                   "v2"
                             (= token "MWS")                     "v1"))
-          valid?  (validate! (.toUpperCase (name method)) uri serialized-body mauth-time mauth-auth mauth-version)]
+          valid?  (validate! (.toUpperCase (name method)) uri serialized-body mauth-time mauth-auth mauth-version query-string)] 
       (if valid?
         (handler (-> request
                      (assoc :body serialized-body)))
