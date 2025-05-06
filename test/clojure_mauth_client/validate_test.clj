@@ -1,10 +1,11 @@
 (ns clojure-mauth-client.validate-test
   (:require [clojure.test :refer [deftest testing is]]
-            [clojure-mauth-client.validate :refer [validate!]]
+            [clojure-mauth-client.validate :as mauth-validate :refer [validate!]]
             [clojure-mauth-client.request :refer [post!]]
-            [clojure-mauth-client.credentials :refer [get-credentials]]))
+            [clojure-mauth-client.credentials :refer [get-credentials]]
+            [clojure.data.json :as json]))
 
-(defn- request-data []
+(def ^:private request-data
   {:verb         (.toUpperCase (name :post))
    :url          "https://www.mdsol.com/api/v1/testing"
    :body         "\"{\"test\":{\"request\":123}}\""
@@ -18,12 +19,12 @@
                 get-credentials (constantly {:mauth-service-url "http://test.com"})]
 
     (testing "testing validate with mauth v1 version"
-             (let [{:keys [verb url body time v1-signature]} (request-data)]
-               (is (true? (validate! verb url body time v1-signature)))))
+      (let [{:keys [verb url body time v1-signature]} request-data]
+        (is (true? (validate! verb url body time v1-signature)))))
 
     (testing "testing validate with mauth v2 version"
-             (let [{:keys [verb url body time v2-signature]} (request-data)]
-               (is (true? (validate! verb url body time v2-signature "v2")))))))
+      (let [{:keys [verb url body time v2-signature]}  request-data]
+        (is (true? (validate! verb url body time v2-signature "v2")))))))
 
 (deftest test-validate-failure
   (with-redefs [post!           (fn [& args]
@@ -31,9 +32,32 @@
                 get-credentials (constantly {:mauth-service-url "http://test.com"})]
 
     (testing "testing validate with mauth v1 version"
-             (let [{:keys [verb url body time v1-signature]} (request-data)]
-               (is (false? (validate! verb url body time v1-signature)))))
+      (let [{:keys [verb url body time v1-signature]}  request-data]
+        (is (false? (validate! verb url body time v1-signature)))))
 
     (testing "testing validate with mauth v2 version"
-             (let [{:keys [verb url body time v2-signature]} (request-data)]
-               (is (false? (validate! verb url body time v2-signature "v2")))))))
+      (let [{:keys [verb url body time v2-signature]}  request-data]
+        (is (false? (validate! verb url body time v2-signature "v2")))))))
+
+(deftest test-auth-ticket-body
+  (let [auth-ticket-atom (atom nil)]
+    (with-redefs [post! (fn [_ _ auth-ticket-body & args]
+                          (reset! auth-ticket-atom auth-ticket-body))
+                  get-credentials (constantly {:mauth-service-url "http://test.com"})]
+      (testing "V1 protocol"
+        (let [{:keys [verb url body time v1-signature]} request-data
+              _ (validate! verb url body time v1-signature)
+              auth-ticket (json/read-str @auth-ticket-atom :key-fn keyword)]
+          (is (= verb (get-in auth-ticket [:authentication_ticket :verb])))
+          (is (= url (get-in auth-ticket [:authentication_ticket :request_url])))
+          (is (nil? (get-in auth-ticket [:authentication_ticket :token])))
+          (is (nil? (get-in auth-ticket [:authentication_ticket :query_string])))))
+      (testing "V2 protocol"
+        (let [{:keys [verb url body time v2-signature]} request-data
+              query-string "color=black&model=mustang"
+              _ (validate! verb url body time v2-signature "v2" query-string)
+              auth-ticket (json/read-str @auth-ticket-atom :key-fn keyword)]
+          (is (= verb (get-in auth-ticket [:authentication_ticket :verb])))
+          (is (= url (get-in auth-ticket [:authentication_ticket :request_url])))
+          (is (= "MWSV2" (get-in auth-ticket [:authentication_ticket :token])))
+          (is (= query-string (get-in auth-ticket [:authentication_ticket :query_string]))))))))
