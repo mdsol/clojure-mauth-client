@@ -11,3 +11,9 @@ pom.xml.asc
 .hg/
 *.iml
 .idea/
+tests.edn
+/.lsp/.cache
+/.clj-kondo/.cache
+/secrets/
+.vscode/
+/.calva
