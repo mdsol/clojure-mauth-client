@@ -9,7 +9,7 @@
   (fn [f]
     ;Note: these are NOT valid real credentials.
     (credentials/define-credentials "abcd7d78-c874-47d9-a829-ccaa51ae75c9"
-                        "-----BEGIN RSA PRIVATE KEY-----
+      "-----BEGIN RSA PRIVATE KEY-----
                         MIIEowIBAAKCAQEAsaa4gcNl4jx9YF7Y/6B+v29c0KBs1vxym0p4hwjZl5GteQgR
                         uFW5wM93F2lUFiVEQoM+Ti3AQjEDWdeuOIfo66LgbNLH7B3JhbkwHti/bMsq7T66
                         Gs3cOhMcKDrTswOv8x72QzsOf1FNs7Yzsu1iwJpttNg+VCRj169hQ/YI39KSuYzQ
@@ -36,7 +36,7 @@
                         9aWuKH+/XjdHf/J1n/AQ1j/G/WExs3UNfrvDgYea5QDnvc2gMBDRkdBwFZHYZLIn
                         e+viqMbgmORJDP/8vbpd0yZjT25ImysJE5cSCGiqHOotDs3jdlUX
                         -----END RSA PRIVATE KEY-----"
-                        "https://mauth-sandbox.imedidata.net")
+      "https://mauth-sandbox.imedidata.net")
     (with-redefs [util/epoch-seconds (fn [] 1532825948)]
       (f))))
 
