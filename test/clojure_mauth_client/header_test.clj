@@ -9,7 +9,7 @@
   (fn [f]
     ;Note: these are NOT valid real credentials.
     (credentials/define-credentials "abcd7d78-c874-47d9-a829-ccaa51ae75c9"
-                        "-----BEGIN RSA PRIVATE KEY-----
+      "-----BEGIN RSA PRIVATE KEY-----
                         MIIEowIBAAKCAQEAsaa4gcNl4jx9YF7Y/6B+v29c0KBs1vxym0p4hwjZl5GteQgR
                         uFW5wM93F2lUFiVEQoM+Ti3AQjEDWdeuOIfo66LgbNLH7B3JhbkwHti/bMsq7T66
                         Gs3cOhMcKDrTswOv8x72QzsOf1FNs7Yzsu1iwJpttNg+VCRj169hQ/YI39KSuYzQ
@@ -36,7 +36,7 @@
                         9aWuKH+/XjdHf/J1n/AQ1j/G/WExs3UNfrvDgYea5QDnvc2gMBDRkdBwFZHYZLIn
                         e+viqMbgmORJDP/8vbpd0yZjT25ImysJE5cSCGiqHOotDs3jdlUX
                         -----END RSA PRIVATE KEY-----"
-                        "https://mauth-sandbox.imedidata.net")
+      "https://mauth-sandbox.imedidata.net")
     (with-redefs [util/epoch-seconds (fn [] 1532825948)]
       (f))))
 
@@ -45,7 +45,7 @@
     (let [creds (credentials/get-credentials)
           mauth-headers (header/build-mauth-headers "GET" "https://www.mdsol.com/api/v2/testing" "" (:app-uuid creds) (:private-key creds))]
       (is (= {"X-MWS-Authentication" "MWS abcd7d78-c874-47d9-a829-ccaa51ae75c9:gI/yUeSTbiOWggLvCv2IJP19GFvmlE8RoaUrIpyLE8DY/mCQd8CUPgT9xNHGNqgPGe9f4CZdiFCC79Xvp6seZAq8/CnqA1dsJW6f46scqqTs+4N1TJml6GNCT9xU4tjUyHWFWpCBQlSvpoTFsLSq2d2zas9M9q1sgwPBS/oPGEN1agCQLHZS/Ime4ub8MuXh0Q8aWodqCpVi4GPiap/KLIQEzbvhsdayxmAcs2XDjpt+CReRf3tBCzB1RucVEfBehxtDQGgvrs/UCUbkpq7gY7f2k0RkrH+IopfhYfdNpmCHW12OEQoZ74TVbh61Uo+xcD1der46+tWk0mdnlyXKow=="
-              "X-MWS-Time"           "1532825948"}))))
+              "X-MWS-Time"           "1532825948"} mauth-headers))))
 
   (testing "It should generate a valid mauth X-MWS header for response"
     (let [creds (credentials/get-credentials)

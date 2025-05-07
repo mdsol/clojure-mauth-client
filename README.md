@@ -93,6 +93,9 @@ With this version we have removed throwing exceptions when not valid mauth heade
 Version 2.0.7 update-
 Updated few of the library versions to remove vulnerability
 
+Version 2.0.8 update -
+For mAuth Protocol V2, includes the query-string (when present), in the authentication ticket to validate the requests.
+
 ## Contributing/ Tests
 Tests can be run using `lein test`.
 

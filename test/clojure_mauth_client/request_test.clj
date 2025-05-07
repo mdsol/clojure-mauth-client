@@ -10,7 +10,7 @@
   (fn [f]
     ;Note: these are NOT valid real credentials.
     (define-credentials "abcd7d78-c874-47d9-a829-ccaa51ae75c9"
-                        "-----BEGIN RSA PRIVATE KEY-----
+      "-----BEGIN RSA PRIVATE KEY-----
                         MIIEowIBAAKCAQEAsaa4gcNl4jx9YF7Y/6B+v29c0KBs1vxym0p4hwjZl5GteQgR
                         uFW5wM93F2lUFiVEQoM+Ti3AQjEDWdeuOIfo66LgbNLH7B3JhbkwHti/bMsq7T66
                         Gs3cOhMcKDrTswOv8x72QzsOf1FNs7Yzsu1iwJpttNg+VCRj169hQ/YI39KSuYzQ
@@ -37,7 +37,7 @@
                         9aWuKH+/XjdHf/J1n/AQ1j/G/WExs3UNfrvDgYea5QDnvc2gMBDRkdBwFZHYZLIn
                         e+viqMbgmORJDP/8vbpd0yZjT25ImysJE5cSCGiqHOotDs3jdlUX
                         -----END RSA PRIVATE KEY-----"
-                        "https://mauth-sandbox.imedidata.net")
+      "https://mauth-sandbox.imedidata.net")
 
     (with-redefs [util/epoch-seconds (fn [] 1532825948)
                   clj-http.client/request (fn [{:keys [client timeout filter worker-pool keepalive as follow-redirects max-redirects response
@@ -108,8 +108,7 @@
                       "mcc-time"           "1532825948"
                       :Content-Type        "application/json"
                       :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
-                      :mauth-version       "v2"
-                      }
+                      :mauth-version       "v2"}
    :url              "https://www.mdsol.com/api/v2/testing1"
    :method           :post
    :body             "\"{\\\"a\\\":{\\\"b\\\":123}}\""
@@ -121,8 +120,7 @@
                       "mcc-time"           "1532825948"
                       :Content-Type        "application/json"
                       :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
-                      :mauth-version       "v2"
-                      }
+                      :mauth-version       "v2"}
    :url              "https://www.mdsol.com/api/v2/testing1"
    :method           :put
    :body             "\"{\\\"a\\\":{\\\"b\\\":123}}\""
@@ -134,8 +132,7 @@
                       "mcc-time"           "1532825948"
                       :Content-Type        "application/json"
                       :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
-                      :mauth-version       "v2"
-                      }
+                      :mauth-version       "v2"}
    :url              "https://www.mdsol.com/api/v2/testing1"
    :method           :get
    :body             "\"\""
@@ -146,8 +143,7 @@
   {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:fdWPNlo6rTdMKxw5wf0KpQMKm22Zuf6PIUQRwIYtyzZgNEgJjgjlVdQogSYHTBVuLMx1iuyXH9m/Mex0jzD0DFZh/YIBRQ2Mn1ChKE5T0ejSyLjaTGHFg6sIpCWxVZzUvPKZKTDDdtk12vovGcRWBTfY62LpJpjlcI1YMEwcCL5A7fgIwwX9pxQO/AVJUDA9cowbBpDIjJlo9ZdcdBWfLcKfgPoWtEO5UDpvZZti0rSTiRLY3a0/l8xPLpuQXq9EjUrac0srunEK6te4XQ9MuhEQRYRkTIMF4Hvqxz9HYtkByuvpiSqNfXKCGXGxYhfAFVvRUhmk2RagISwj4qzbUA==;" "mcc-time" "1532825948"
                       :Content-Type        "application/json"
                       :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
-                      :mauth-version       "v2"
-                      }
+                      :mauth-version       "v2"}
    :url              "https://www.mdsol.com/api/v2/testing1?testABCD=1234"
    :method           :get
    :body             "\"\""
@@ -155,12 +151,11 @@
    :as               :auto})
 
 (def mock-delete-v2
-  {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:rQR2OK8w3ixCyVqMZCxzUcEObaigSLfoHSgiGbONc0MD7GrhZ3rLLefV3nUaf3g/0hQi3Irx07NU+yBNS37Orya8eufqwsod1P2FeutNbHVLFhjTG+D/+StknEemQfzV7ZZ3abejzc02QP2QWn9jUk9sQjhByPcVbxapwnM2JAj5hCKmm1hE5UsJBk6YW59gWpTUPGGkDlp39LZfTV0lDOc402STy5h56FZSd9I92LA78f6ojF2izYlmp6Q+12FjuWARn9bjBPewRk8cKhYUs3fVl4ZEFwMyQM759waX9VASE9e/UCiFZTbZL2tCrvIRFys5FYmTy53A1pYZGjJ7Kw==;"
+  {:headers          {"mcc-authentication" "MWSV2 abcd7d78-c874-47d9-a829-ccaa51ae75c9:f2qLS57HqU7ZoJx5hlhIt9nyjbB/tqiOwcWe3Y5lO7OLL2OKuR3Et8nF5SNEu4ToWrr67nu/16ztdNRC0138uRVVEdIhnPgD3z9WZZehHaoP64BHBEcleP6MBFVJ2p/9nJvqjvZ64qAkovzQf6lGQdBSp93X8MrDN/BMSxSGOUUXffPst4nzzl09dhgCCnk0vqHG8/wDELi2I5ieCxt3WVMDj+rcffm+C0e6Oc7qT4WVXYwxnVOSOZRWo7cpd5dEXTfG0KSJK47Zdoy/qlrhSY4byk+qwky57lROMixNxdeE5PNTh6qmvvvZWRVpb+vKJraP849eacgPEyBIvAezwA==;"
                       "mcc-time"           "1532825948"
                       :Content-Type        "application/json"
                       :Authorization       "da2-3ubdc4ekk5dw5n2dvwjumet3fq"
-                      :mauth-version       "v2"
-                      }
+                      :mauth-version       "v2"}
    :url              "https://www.mdsol.com/api/v2/testing1"
    :method           :delete
    :body             "\"\""
@@ -175,58 +170,49 @@
                       json/write-str))
 
 (deftest header-test
+  (get-credentials)
   (testing "It should make a valid GET request."
-    (let [creds (get-credentials)
-          get-response (get! "https://www.mdsol.com" "/api/v2/testing")]
+    (let [get-response (get! "https://www.mdsol.com" "/api/v2/testing")]
       (is (= mock-get get-response))))
 
   (testing "It should make a valid GET request with a querystring."
-    (let [creds (get-credentials)
-          get-response (get! "https://www.mdsol.com" "/api/v2/testing?testABCD=1234")]
+    (let [get-response (get! "https://www.mdsol.com" "/api/v2/testing?testABCD=1234")]
       (is (= mock-get-with-qs get-response))))
 
   (testing "It should make a valid POST request."
-    (let [creds (get-credentials)
-          post-response (post! "https://www.mdsol.com" "/api/v2/testing1" mock-payload)]
+    (let [post-response (post! "https://www.mdsol.com" "/api/v2/testing1" mock-payload)]
       (is (= mock-post post-response))))
 
   (testing "It should make a valid DELETE request."
-    (let [creds (get-credentials)
-          delete-response (delete! "https://www.mdsol.com" "/api/v2/testing2")]
+    (let [delete-response (delete! "https://www.mdsol.com" "/api/v2/testing2")]
       (is (= mock-delete delete-response))))
 
   (testing "It should make a valid PUT request."
-    (let [creds (get-credentials)
-          put-response (put! "https://www.mdsol.com" "/api/v2/testing3" mock-payload)]
+    (let [put-response (put! "https://www.mdsol.com" "/api/v2/testing3" mock-payload)]
       (is (= mock-put put-response))))
 
   (testing "It should make a valid POST request with v2 mauth header"
-    (let [creds (get-credentials)
-          post-response (post! "https://www.mdsol.com" "/api/v2/testing1" mock-payload :additional-headers additional-headers
+    (let [post-response (post! "https://www.mdsol.com" "/api/v2/testing1" mock-payload :additional-headers additional-headers
                                :with-sni? false)]
       (is (= mock-post-v2 post-response))))
 
   (testing "It should make a valid PUT request with v2 mauth header"
-    (let [creds (get-credentials)
-          put-response (put! "https://www.mdsol.com" "/api/v2/testing1" mock-payload :additional-headers additional-headers
+    (let [put-response (put! "https://www.mdsol.com" "/api/v2/testing1" mock-payload :additional-headers additional-headers
                              :with-sni? false)]
       (is (= mock-put-v2 put-response))))
 
   (testing "It should make a valid GET request with v2 mauth header"
-    (let [creds (get-credentials)
-          get-response (get! "https://www.mdsol.com" "/api/v2/testing1" :additional-headers additional-headers
+    (let [get-response (get! "https://www.mdsol.com" "/api/v2/testing1" :additional-headers additional-headers
                              :with-sni? false)]
       (is (= mock-get-v2 get-response))))
 
   (testing "It should make a valid GET request with query string and with v2 mauth header"
 
-    (let [creds (get-credentials)
-          get-response (get! "https://www.mdsol.com" "/api/v2/testing1?testABCD=1234" :additional-headers additional-headers
+    (let [get-response (get! "https://www.mdsol.com" "/api/v2/testing1?testABCD=1234" :additional-headers additional-headers
                              :with-sni? false)]
       (is (= mock-get-with-qs-v2 get-response))))
 
   (testing "It should make a valid DELETE request with v2 mauth header"
-    (let [creds (get-credentials)
-          delete-response (delete! "https://www.mdsol.com" "/api/v2/testing1" :additional-headers additional-headers
+    (let [delete-response (delete! "https://www.mdsol.com" "/api/v2/testing1" :additional-headers additional-headers
                                    :with-sni? false)]
-      (is (= mock-delete-v2) delete-response))))
+      (is (= mock-delete-v2 delete-response)))))
