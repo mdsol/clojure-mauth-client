@@ -1,10 +1,12 @@
 (ns clojure-mauth-client.header
-  (:require [pem-reader.core :as pem]
-            [clojure.data.codec.base64 :as base64]
-            [clojure-mauth-client.util :as util])
+  (:require
+   [clojure-mauth-client.util :as util]
+   [clojure.data.codec.base64 :as base64]
+   [clojure.string :as str]
+   [pem-reader.core :as pem])
   (:use digest)
-  (:import (java.io ByteArrayInputStream)
-           (javax.crypto Cipher KeyGenerator SecretKey)))
+  (:import
+   (javax.crypto Cipher)))
 
 (defn- sign-mauth [message app-uuid private-key]
   (->> (let [private-key (pem/private-key (util/read-key private-key))
@@ -17,22 +19,20 @@
 
 (defn- make-mws-auth-string [verb url body app-uuid time]
   (->> [verb (util/get-uri url) body app-uuid time]
-       (clojure.string/join "\n"))
-  )
+       (str/join "\n")))
 
 (defn- make-mws-auth-string-for-response [status body app-uuid time]
   (->> [status body app-uuid time]
-       (clojure.string/join "\n"))
-  )
+       (str/join "\n")))
 
 (defn build-mauth-headers
   ([verb url body app-uuid private-key]
-    (let [x-mws-time (util/epoch-seconds)
-          x-mws-authentication (make-mws-auth-string verb url body app-uuid x-mws-time)]
-      {"X-MWS-Authentication" (-> x-mws-authentication
-                                  util/msg->sha512
-                                  (sign-mauth app-uuid private-key))
-       "X-MWS-Time"           (str x-mws-time)}))
+   (let [x-mws-time (util/epoch-seconds)
+         x-mws-authentication (make-mws-auth-string verb url body app-uuid x-mws-time)]
+     {"X-MWS-Authentication" (-> x-mws-authentication
+                                 util/msg->sha512
+                                 (sign-mauth app-uuid private-key))
+      "X-MWS-Time"           (str x-mws-time)}))
   ([status body app-uuid private-key]
    (let [x-mws-time (util/epoch-seconds)
          x-mws-authentication (make-mws-auth-string-for-response status body app-uuid x-mws-time)]

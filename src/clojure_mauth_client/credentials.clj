@@ -13,15 +13,11 @@
       (throw (Exception. "Please be sure the app-uuid, private-key and mauth-service-url are defined and valid,
                           either in the environment variables APP_UUID, MAUTH_KEY and MAUTH_SERVICE_URL respectively.
                           Or, you may call define-credentials to set them manually."))
-      (reset! credential cred)
-      )
-    )
-  )
+      (reset! credential cred))))
 
 (defn get-credentials []
   (if (empty? @credential)
     (define-credentials (System/getenv "APP_UUID")
-                        (System/getenv "MAUTH_KEY")
-                        (System/getenv "MAUTH_SERVICE_URL")))
-  @credential
-  )
+      (System/getenv "MAUTH_KEY")
+      (System/getenv "MAUTH_SERVICE_URL")))
+  @credential)

@@ -26,23 +26,23 @@
                   ["vcs" "push"]]
 
   :aliases {"bump!" ^{:doc "Bump the project version number and push the commits to the original repository."}
-            ["do"
-             ["vcs" "assert-committed"]
-             ["change" "version" "leiningen.release/bump-version"]
-             ["vcs" "commit"]
-             ["vcs" "push"]]}
+                    ["do"
+                     ["vcs" "assert-committed"]
+                     ["change" "version" "leiningen.release/bump-version"]
+                     ["vcs" "commit"]
+                     ["vcs" "push"]]}
 
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}}
 
   :jvm-opts ~(concat
-              [] ;other opts...
-              (if (let [v (-> (System/getProperty "java.version")
-                              (clojure.string/split #"[.]")
-                              first
-                              Integer.)]
-                    (and (>= v 9) (< v 11)))
-                ["--add-modules" "java.xml.bind"]
-                []))
+               [] ;other opts...
+               (if (let [v (-> (System/getProperty "java.version")
+                         (clojure.string/split #"[.]")
+                         first
+                         Integer.)]
+                     (and (>= v 9) (< v 11)))
+                 ["--add-modules" "java.xml.bind"]
+                 []))
   :aot :all)
