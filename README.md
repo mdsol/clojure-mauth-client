@@ -4,7 +4,7 @@
 
 Leiningen/Boot Coords:
 
-```[clojure-mauth-client "2.0.7"]```
+```[clojure-mauth-client "2.0.8"]```
 
 Here it is folks, a nice, clean MAuth client done in the simplest and most minimal way possible, for your Clojure application.
 
@@ -93,7 +93,7 @@ With this version we have removed throwing exceptions when not valid mauth heade
 Version 2.0.7 update-
 Updated few of the library versions to remove vulnerability
 
-Version 2.0.8 update -
+Version 2.0.8 upsdate -
 For mAuth Protocol V2, includes the query-string (when present), in the authentication ticket to validate the requests.
 
 ## Contributing/ Tests

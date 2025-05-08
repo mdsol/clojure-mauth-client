@@ -1,8 +1,6 @@
 language: clojure
 dist: trusty
 
-sudo: required
-
 addons:
       apt:
         packages:
@@ -39,7 +37,7 @@ jobs:
           deploy:
             provider: script
             script: lein deploy
-            skip_cleanup: true
+            cleanup: false
             on:
               tags: true
               all_branches: true

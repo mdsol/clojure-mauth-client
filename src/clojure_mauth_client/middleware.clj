@@ -5,12 +5,12 @@
 
 (defn- downcase-header-keys [headers]
   (reduce-kv
-    (fn [m k v]
-      (assoc m (lower-case (name k)) v))
-    {} headers))
+   (fn [m k v]
+     (assoc m (lower-case (name k)) v))
+   {} headers))
 
 (defn wrap-mauth-verification [handler]
-  (fn[request]
+  (fn [request]
     (let [{method :request-method
            uri :uri
            body :body
@@ -35,7 +35,7 @@
                           (cond
                             (= token "MWSV2")                   "v2"
                             (= token "MWS")                     "v1"))
-          valid?  (validate! (.toUpperCase (name method)) uri serialized-body mauth-time mauth-auth mauth-version query-string)] 
+          valid?  (validate! (.toUpperCase (name method)) uri serialized-body mauth-time mauth-auth mauth-version query-string)]
       (if valid?
         (handler (-> request
                      (assoc :body serialized-body)))
