@@ -29,7 +29,6 @@
   ([verb uri body time signature mauth-version]
    (validate! verb uri body time signature mauth-version nil))
   ([verb uri body time signature mauth-version query-string]
-   (prn :uri uri)
    (let [creds            (get-credentials)
          sig              (signature-map signature)
          auth-body        (build-auth-ticket-body verb (:app-uuid sig) uri body time (:signature sig))

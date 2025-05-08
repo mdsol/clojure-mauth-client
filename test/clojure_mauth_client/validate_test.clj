@@ -41,7 +41,7 @@
 
 (deftest test-auth-ticket-body
   (let [auth-ticket-atom (atom nil)]
-    (with-redefs [post! (fn [_ _ auth-ticket-body & args]
+    (with-redefs [post! (fn [_ _ auth-ticket-body & _args]
                           (reset! auth-ticket-atom auth-ticket-body))
                   get-credentials (constantly {:mauth-service-url "http://test.com"})]
       (testing "V1 protocol"
