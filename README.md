@@ -101,6 +101,25 @@ Tests can be run using `lein test`.
 
 Contributions are welcome by Pull Request, and we welcome and encourage that!
 
+## Release
+Currently, our releases are done manually, but the deploy is done by Travis/CI when a tag is present.
+
+### How to release
+We use the built-in lein task `release`. This task will verify that there is nothing uncommitted, updates the release version, 
+tags the release, deploys to clojars (Travis/CI) and then bumps the version to the next snapshot version (`lein bump!`). See `lein help release` for more details.
+
+1. Switch to the `master` branch
+2. Make sure you pull the latest code from Github
+3. Create a new branch. This is because main is blocked from pushing commits directly
+4. Set the upstream from this new branch `git push --set-upstream origin <new-branch>`
+5. run `lein release`
+6. PR the changes created during the release
+7. Travis CI will trigger and deploy
+8. If Travis CI deploys without issues, don't merge yet, run `lein bump!`
+9. PR the changes created during the `bump!` and once approved, merge the PR.
+10. Verify if the new version was deployed to Clojars.
+11. Pat yourself on the back! You just released the latest version of the lib
+
 ## License
 
 Copyright © 2018 Medidata Solutions
