@@ -5,7 +5,7 @@
    [clojure.java.io :as io]
    [clojure.string :as str]
    [clojure.test :refer [deftest is]]
-   [com.mdsol.mauth.clojure.signer :as sut])
+   [com.mdsol.mauth.clojure.signer :as signer])
   (:import
    (java.io File FilenameFilter)
    (java.net URI)))
@@ -47,7 +47,7 @@
   (let [{:keys [app-uuid request-time private-key-file]}
         (charred/read-json (io/file suite-base "signing-config.json")
                            :key-fn csk/->kebab-case-keyword)]
-    (sut/default-signer :app-uuid app-uuid
+    (signer/default-signer :app-uuid app-uuid
                         :private-key (slurp (io/file suite-base private-key-file))
                         :epoch-time-provider (constantly request-time))))
 
@@ -75,5 +75,5 @@
   (eval
    `(deftest ~(-> test-cases (nth i) :name symbol)
       (is (= ~(-> test-cases (nth i) :headers norm-headers)
-             (norm-headers (sut/gen-req-headers
+             (norm-headers (signer/gen-req-headers
                             signer (-> test-cases (nth ~i) :request))))))))
