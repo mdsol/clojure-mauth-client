@@ -10,6 +10,8 @@
    (java.io File FilenameFilter)
    (java.net URI)))
 
+(set! *warn-on-reflection* true)
+
 (def suite-base (io/file "mauth-protocol-test-suite"))
 
 (defn child-by-ext [^File parent ext]
