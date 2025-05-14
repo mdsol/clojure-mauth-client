@@ -5,7 +5,6 @@
             :url "https://opensource.org/licenses/MIT"}
   :dependencies [[camel-snake-kebab "0.4.3"]
                  [com.cnuernber/charred "1.033"]
-                 [com.mdsol/mauth-test-utils "16.0.0+0-a6fb9a5f+20240725-1833-SNAPSHOT"]
                  [org.clojure/clojure "1.12.0"]
                  #_[xsc/pem-reader "0.1.1"]
                  #_[digest "1.4.10"]
@@ -14,6 +13,8 @@
                  #_[org.clojure/data.json "2.5.0"]
                  #_[javax.xml.bind/jaxb-api "2.3.1"]
                  [com.mdsol/mauth-signer "16.0.0"]]
+
+  :profiles {:test {:dependencies [[com.mdsol/mauth-test-utils "16.0.0+0-a6fb9a5f+20240725-1833-SNAPSHOT"]]}}
 
   :repositories [["maven-prod-virtual" {:url      "https://mdsol.jfrog.io/mdsol/maven-prod-virtual"
                                         :username :env/artifactory_username
