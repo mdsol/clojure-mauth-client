@@ -1,68 +1,14 @@
 (ns com.mdsol.mauth.clojure.signer
-  (:require [clojure.string :as str])
-  (:import (clojure.lang IFn Keyword)
-           (com.mdsol.mauth DefaultSigner
-                            MAuthVersion
-                            Signer)
-           (com.mdsol.mauth.util CurrentEpochTimeProvider EpochTimeProvider)
-           (java.io ByteArrayInputStream
-                    CharArrayReader
-                    InputStream
-                    StringReader)
-           (java.util List UUID)))
+  (:require
+   [com.mdsol.mauth.clojure.convert :as convert])
+  (:import
+   (com.mdsol.mauth DefaultSigner Signer)
+   (com.mdsol.mauth.util CurrentEpochTimeProvider EpochTimeProvider)
+   (java.io
+    InputStream)
+   (java.util List)))
 
 (set! *warn-on-reflection* true)
-
-(defmulti ->uuid-impl
-  "Multimethod to convert an arbitrary type to `UUID`.
-   This multimethod underlies the `->uuid` function, which simply adds the
-   appropriate return type hint."
-  type)
-(defmethod ->uuid-impl UUID [x] x)
-(defmethod ->uuid-impl String [x] (parse-uuid x))
-(defmethod ->uuid-impl :default [x] (->uuid-impl (str x)))
-
-(defn ->uuid
-  "Converts an arbitrary type to `UUID`.
-   To extend support to additional types, define a new method for
-   `->uuid-impl`."
-  ^UUID [x]
-  (->uuid-impl x))
-
-(defmulti ->version-impl
-  "Multimethod to convert an arbitrary type to `MAuthVersion`.
-   This multimethod underlies the `->version` function, which simply adds the
-   appropriate return type hint."
-  type)
-(defmethod ->version-impl MAuthVersion [x] x)
-(defmethod ->version-impl String [x] (MAuthVersion/valueOf (str/upper-case x)))
-(defmethod ->version-impl :default [x] (->version-impl (str x)))
-(defmethod ->version-impl Keyword [x] (->version-impl (name x)))
-
-(defn ->version
-  "Converts an arbitrary type to `MAuthVersion`.
-   To extend support to additional types, define a new method for
-   `->version-impl`."
-  ^MAuthVersion [x]
-  (->version-impl x))
-
-(defmulti ->epoch-time-provider-impl
-  "Multimethod to convert an arbitrary type to `EpochTimeProvider`.
-   This multimethod underlies the `->epoch-time-provider` function, which simply
-   adds the appropriate return type hint."
-  type)
-(defmethod ->epoch-time-provider-impl EpochTimeProvider [x] x)
-(defmethod ->epoch-time-provider-impl IFn [x]
-  (reify EpochTimeProvider
-    (inSeconds [_this]
-      (long (x)))))
-
-(defn ->epoch-time-provider
-  "Converts an arbitrary type to `EpochTimeProvider`.
-   To extend support to additional types, define a new method for
-   `->epoch-time-provider-impl`."
-  ^EpochTimeProvider [x]
-  (->epoch-time-provider-impl x))
 
 (def current-epoch-time-provider
   "Provides the actual current time according to the system clock."
@@ -89,10 +35,10 @@
              epoch-time-provider sign-versions]
       :or {epoch-time-provider current-epoch-time-provider
            sign-versions [:mwsv2]}}]
-  (DefaultSigner. (->uuid app-uuid)
+  (DefaultSigner. (convert/->uuid app-uuid)
                   ^String private-key
-                  (->epoch-time-provider epoch-time-provider)
-                  ^List (list* (map ->version sign-versions))))
+                  ^EpochTimeProvider (convert/->epoch-time-provider epoch-time-provider)
+                  ^List (list* (map convert/->version sign-versions))))
 
 (comment
   (def my-signer
@@ -127,35 +73,6 @@ JXNpe60qgURHJigvYmseF9p7f36w2cnGMpJowHhbY7QFYosuIOQ7Am8h24dgpHtd
 B8+UoQ/ICy2ahrEljIQOLSqekDRq8QaRSpIZ2MNFVRPtH85R/zmxrVvT
 -----END RSA PRIVATE KEY-----"})))
 
-;; The JVM does not have union types, so this is the best we can do
-(defmulti ->array-or-input-stream
-  "Converts an arbitrary type to either `byte[]` or `InputStream`.
-   The return value is a vector whose first element is either `:array` or
-   `:input-stream`, and whose second element is a value of the corresponding
-   type."
-  type)
-
-;; Lazy reading
-(defmethod ->array-or-input-stream InputStream [x]
-  [:input-stream x])
-
-;; Eager reading
-(defmethod ->array-or-input-stream (type (byte-array 0)) [x]
-  [:array x])
-(defmethod ->array-or-input-stream String [^String x]
-  (->array-or-input-stream (.getBytes x "UTF-8")))
-(defmethod ->array-or-input-stream CharSequence [x]
-  (->array-or-input-stream (str x)))
-(defmethod ->array-or-input-stream ByteArrayInputStream
-  [^ByteArrayInputStream x]
-  (->array-or-input-stream (.readAllBytes x)))
-(defmethod ->array-or-input-stream StringReader [^StringReader x]
-  (->array-or-input-stream (slurp x)))
-(defmethod ->array-or-input-stream CharArrayReader [^CharArrayReader x]
-  (->array-or-input-stream (slurp x)))
-(defmethod ->array-or-input-stream nil [_]
-  [:array nil])
-
 (defn gen-req-headers
   "Given a signer and a Ring request, returns a map of MAuth headers."
   [^Signer signer
@@ -163,7 +80,7 @@ B8+UoQ/ICy2ahrEljIQOLSqekDRq8QaRSpIZ2MNFVRPtH85R/zmxrVvT
   (let [method (if (ident? request-method)
                  (name request-method)
                  ^String request-method)
-        [t b] (->array-or-input-stream body)]
+        [t b] (convert/->bytes-or-input-stream body)]
     (into {}
           ;; The InputStream overload can only provide signatures for one
           ;; version at a time, while the array overload requires holding the
@@ -171,10 +88,10 @@ B8+UoQ/ICy2ahrEljIQOLSqekDRq8QaRSpIZ2MNFVRPtH85R/zmxrVvT
           ;; dispatch to one or the other depending on whether the request body
           ;; is already fully held in memory.
           (case t
-            :input-stream (.generateRequestHeaders signer method uri
-                                                   ^InputStream b
-                                                   query-string)
-            :array (.generateRequestHeaders signer method uri
+            :stream (.generateRequestHeaders signer method uri
+                                             ^InputStream b
+                                             query-string)
+            :bytes (.generateRequestHeaders signer method uri
                                             ^bytes b
                                             query-string)))))
 
