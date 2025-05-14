@@ -1,12 +1,14 @@
 (ns com.mdsol.mauth.clojure.signer-test
-  (:require [camel-snake-kebab.core :as csk]
-            [charred.api :as charred]
-            [clojure.java.io :as io]
-            [clojure.string :as str]
-            [clojure.test :refer [deftest is]]
-            [com.mdsol.mauth.clojure.signer :as sut])
-  (:import (java.net URI)
-           (java.io File FilenameFilter)))
+  (:require
+   [camel-snake-kebab.core :as csk]
+   [charred.api :as charred]
+   [clojure.java.io :as io]
+   [clojure.string :as str]
+   [clojure.test :refer [deftest is]]
+   [com.mdsol.mauth.clojure.signer :as sut])
+  (:import
+   (java.io File FilenameFilter)
+   (java.net URI)))
 
 (def suite-base (io/file "mauth-protocol-test-suite"))
 
