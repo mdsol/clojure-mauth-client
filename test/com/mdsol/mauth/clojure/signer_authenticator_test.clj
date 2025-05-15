@@ -167,7 +167,16 @@
                 (assoc-in [:headers "X-MWS-Time"] 1)
                 (assoc-in [:headers "MCC-Time"] 1)
                 (assoc ::is-request true))))
-        "Server middleware calls on-auth-failure on exception")))
+        "Server middleware calls on-auth-failure on exception")
+    (is (= {:status 401
+            :body {:message "MAuth request validation failed because request time was older than10s"}}
+           ((auth/wrap-handler identity authenticator)
+            (-> (request-fn)
+                (update :headers merge headers)
+                (assoc-in [:headers "X-MWS-Time"] 1)
+                (assoc-in [:headers "MCC-Time"] 1)
+                (assoc ::is-request true))))
+        "default-on-auth-failure returns exception message on exception")))
 
 (doseq [i (range (count test-cases-v2))]
   (eval
