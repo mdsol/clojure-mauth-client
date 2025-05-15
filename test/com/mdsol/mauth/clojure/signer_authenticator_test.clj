@@ -174,9 +174,15 @@
             (-> (request-fn)
                 (update :headers merge headers)
                 (assoc-in [:headers "X-MWS-Time"] 1)
-                (assoc-in [:headers "MCC-Time"] 1)
-                (assoc ::is-request true))))
-        "default-on-auth-failure returns exception message on exception")))
+                (assoc-in [:headers "MCC-Time"] 1))))
+        "default-on-auth-failure returns exception message on exception")
+    (is (= {:status 401
+            :body {:message "MAuth authentication failed."}}
+           ((auth/wrap-handler identity authenticator)
+            (-> (request-fn)
+                (update :headers merge headers)
+                (assoc :body "This is not the right body!"))))
+        "default-on-auth-failure returns default message on auth failure")))
 
 (doseq [i (range (count test-cases-v2))]
   (eval
