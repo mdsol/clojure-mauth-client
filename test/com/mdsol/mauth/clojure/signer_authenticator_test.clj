@@ -139,11 +139,12 @@
             ::got-request true}
            ((auth/wrap-handler identity authenticator
                                {:on-auth-failure
-                                (fn [{::keys [is-request]} exc]
-                                  (is (nil? exc))
+                                (fn [{:keys [request exception handler]}]
+                                  (is (nil? exception))
+                                  (is (= identity handler))
                                   {:status 401
                                    :body "oops!"
-                                   ::got-request is-request})})
+                                   ::got-request (::is-request request)})})
             (-> (request-fn)
                 (update :headers merge headers)
                 (assoc :body "This is not the right body!")
@@ -154,11 +155,13 @@
             ::got-request true}
            ((auth/wrap-handler identity authenticator
                                {:on-auth-failure
-                                (fn [{::keys [is-request]} exc]
-                                  (is (instance? MAuthValidationException exc))
+                                (fn [{:keys [request exception handler]}]
+                                  (is (instance? MAuthValidationException 
+                                                 exception))
+                                  (is (= identity handler))
                                   {:status 401
                                    :body "oops!"
-                                   ::got-request is-request})})
+                                   ::got-request (::is-request request)})})
             (-> (request-fn)
                 (update :headers merge headers)
                 (assoc-in [:headers "X-MWS-Time"] 1)

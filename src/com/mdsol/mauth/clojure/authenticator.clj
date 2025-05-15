@@ -78,13 +78,22 @@
    :body "MAuth authentication failed."})
 
 (defn default-on-auth-failure
-  ([_request _exception]
+  ([_]
    default-401)
   ;; TODO: Support async
   #_([_request respond _raise]
      (respond default-401)))
 
 (defn wrap-handler
+  "Middleware for handlers conforming to the Ring signature.
+   
+   Options:
+   - on-auth-failure: A function called when authentication fails, which should
+     return a response. Defaults to `default-on-auth-failure`. It receives a map
+     with the following keys:
+     - request: the request which failed authentication
+     - handler: the handler wrapped by this middleware
+     - exception: (optional) the exception thrown during validation, if any"
   ([handler authenticator]
    (wrap-handler handler authenticator {}))
   ([handler authenticator {:keys [on-auth-failure]
@@ -94,9 +103,12 @@
       (try
         (if (valid? authenticator request)
           (handler request)
-          (on-auth-failure request nil))
+          (on-auth-failure {:request request
+                            :handler handler}))
         (catch MAuthValidationException e
-          (on-auth-failure request e))))
+          (on-auth-failure {:request request
+                            :handler handler
+                            :exception e}))))
      ;; TODO: Support async
      #_([request respond raise]
         (if (valid? authenticator request)
