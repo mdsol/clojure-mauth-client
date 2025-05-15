@@ -73,14 +73,13 @@
   (try
     (.authenticate authenticator (mauth-request request))))
 
-(def ^:private default-401
-  {:status 401
-   :body "MAuth authentication failed."})
-
 (defn default-on-auth-failure
   "Returns a static map with a 401 response."
-  ([_]
-   default-401)
+  ([{:keys [exception]}]
+   {:status 401
+    :body {:message (if exception
+                      (ex-message exception)
+                      "MAuth authentication failed.")}})
   ;; TODO: Support async
   #_([_request respond _raise]
      (respond default-401)))
