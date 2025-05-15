@@ -108,8 +108,6 @@
   (auth/default-authenticator :client-pk-provider pk-provider
                               :epoch-time-provider (constantly 1444672125)))
 
-;; Index-based iteration, because some requests are input streams, and they
-;; cannot be used as literals for evaluation.
 (doseq [i (range (count test-cases))]
   (eval
    `(deftest ~(-> test-cases (nth i) :name symbol)
