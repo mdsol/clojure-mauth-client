@@ -11,30 +11,6 @@
    (com.mdsol.mauth.utils ClientPublicKeyProvider)
    (java.net URI)))
 
-(comment
-  ;; construct AC
-  (def ac (AuthenticatorConfiguration. base-url
-                                       request-url-path
-                                       security-tokens-url-path))
-  ;; construct Signer
-  (def signer (default-signer ...))
-  ;; construct CPKP
-  ;; option 1: use apache one -- probably easier
-  (def key-provider (HttpClientPublicKeyProvider. ac signer))
-  ;; option 2: reuse code from legacy client lib
-  ;; construct RA
-  (def authenticator (RequestAuthenticator. key-provider))
-  ;; construct MAuthRequest
-  (def mauth-req
-    (MAuthRequest. authenticationHeaderValue
-                   bodyInputStream  ;; OR byte array
-                   http-method
-                   time-header-value
-                   resource-path
-                   query-parameters))
-
-  (.authenticate authenticator mauth-req))
-
 ;; TODO: Provide factory for using any HTTP client. For now, callers supply
 ;;       their own ClientPublicKeyProvider impl.
 
