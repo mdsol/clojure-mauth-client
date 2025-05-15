@@ -18,7 +18,6 @@
                  [com.mdsol/mauth-signer "19.0.0"]]
 
   :profiles {:test {:dependencies [[com.mdsol/mauth-authenticator-apachehttp "19.0.0"]
-                                   [com.mdsol/mauth-test-utils "19.0.0"]
                                    [pjstadig/humane-test-output "0.8.3"]]
                     :injections [(require 'pjstadig.humane-test-output)
                                  (pjstadig.humane-test-output/activate!)]}}
