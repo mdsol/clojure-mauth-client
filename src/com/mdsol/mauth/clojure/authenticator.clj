@@ -11,6 +11,8 @@
    (com.mdsol.mauth.utils ClientPublicKeyProvider)
    (java.net URI)))
 
+(set! *warn-on-reflection* true)
+
 ;; TODO: Provide factory for using any HTTP client. For now, callers supply
 ;;       their own ClientPublicKeyProvider impl.
 
