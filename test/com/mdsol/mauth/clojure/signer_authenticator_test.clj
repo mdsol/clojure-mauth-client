@@ -133,14 +133,18 @@
               (update req :headers
                       merge headers)))
           "Server middleware passes through on success"))
-    (is (= {:status 401 :body "oops!"}
+    (is (= {:status 401
+            :body "oops!"
+            ::got-request true}
            ((auth/wrap-handler identity authenticator
-                               {:on-auth-failure (constantly
-                                                  {:status 401
-                                                   :body "oops!"})})
+                               {:on-auth-failure (fn [{::keys [is-request]} _exc]
+                                                   {:status 401
+                                                    :body "oops!"
+                                                    ::got-request is-request})})
             (-> (request-fn)
                 (update :headers merge headers)
-                (assoc :body "This is not the right body!"))))
+                (assoc :body "This is not the right body!")
+                (assoc ::is-request true))))
         "Server middleware calls on-auth-failure on failure")
     (is (= {:status 401 :body "oops!"}
            ((auth/wrap-handler identity authenticator
