@@ -21,6 +21,7 @@
    - app-uuid: The UUID registered in the MAuth server for the signing
      application.
    - private-key: The application's private key as a String.
+   
    Optional arguments:
    - epoch-time-provider: A function which returns the current time as seconds
      since the Unix epoch. Defaults to a function which returns the system clock
