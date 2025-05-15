@@ -44,6 +44,7 @@
    Required arguments:
    - client-pk-provider: An instance of
      `com.mdsol.mauth.utils.ClientPublicKeyProvider`
+   
    Optional arguments:
    - epoch-time-provider: A function which returns the current time as seconds
      since the Unix epoch. Defaults to a function which returns the system clock
