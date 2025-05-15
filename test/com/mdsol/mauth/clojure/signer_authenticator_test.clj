@@ -137,7 +137,8 @@
             :body "oops!"
             ::got-request true}
            ((auth/wrap-handler identity authenticator
-                               {:on-auth-failure (fn [{::keys [is-request]} _exc]
+                               {:on-auth-failure (fn [{::keys [is-request]} exc]
+                                                   (is (nil? exc))
                                                    {:status 401
                                                     :body "oops!"
                                                     ::got-request is-request})})
