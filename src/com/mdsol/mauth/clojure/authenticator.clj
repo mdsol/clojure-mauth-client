@@ -70,3 +70,28 @@
   "Returns `true` if the Ring request map passes `authenticator`'s validation."
   [^Authenticator authenticator request]
   (.authenticate authenticator (mauth-request request)))
+
+(def ^:private default-401
+  {:status 401
+   :body "MAuth authentication failed."})
+
+(defn default-on-auth-failure
+  ([_request]
+   default-401)
+  ([_request respond _raise]
+   (respond default-401)))
+
+(defn wrap-handler
+  ([handler authenticator]
+   (wrap-handler handler authenticator {}))
+  ([handler authenticator {:keys [on-auth-failure]
+                           :or {on-auth-failure default-on-auth-failure}}]
+   (fn
+     ([request]
+      (if (valid? authenticator request)
+        (handler request)
+        (on-auth-failure request)))
+     ([request respond raise]
+      (if (valid? authenticator request)
+        (handler request respond raise)
+        (on-auth-failure request respond raise))))))

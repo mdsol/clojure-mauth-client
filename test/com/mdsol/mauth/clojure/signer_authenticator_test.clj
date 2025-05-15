@@ -117,7 +117,7 @@
                   symbol)
       (let [{:keys ~'[request-fn headers]} (nth test-cases-v2 ~i)]
         (is (~'= (norm-headers ~'headers)
-               (norm-headers (signer/gen-req-headers signer-v2 (~'request-fn))))
+                 (norm-headers (signer/gen-req-headers signer-v2 (~'request-fn))))
             "Signer produces expected headers")
         ;; = only compares true on streams if it's the same instance
         (let ~'[req (request-fn)]
@@ -142,7 +142,7 @@
                   symbol)
       (let [{:keys ~'[request-fn headers]} (nth test-cases-v1 ~i)]
         (is (~'= (norm-headers ~'headers)
-               (norm-headers (signer/gen-req-headers signer-v1 (~'request-fn))))
+                 (norm-headers (signer/gen-req-headers signer-v1 (~'request-fn))))
             "Signer produces expected headers")
         ;; = only compares true on streams if it's the same instance
         (let ~'[req (request-fn)]
@@ -152,8 +152,15 @@
                    (update ((signer/wrap-client identity signer-v1)
                             ~'req)
                            :headers norm-headers))
-              "Middleware adds expected headers"))
+              "Client middleware adds expected headers"))
         (is (true? (auth/valid? authenticator
                                 (update (~'request-fn) :headers
                                         merge ~'headers)))
-            "Authenticator validates headers")))))
+            "Authenticator validates headers")
+        (let [~'req (update (~'request-fn) :headers
+                            merge ~'headers)]
+          (is (~'= ~'req #_{:status 401 :body "oops!"}
+                   ((auth/wrap-handler identity authenticator)
+                    (update ~'req :headers
+                            merge ~'headers)))
+              "Server middleware passes through on success"))))))
