@@ -41,7 +41,7 @@
                   ^EpochTimeProvider (convert/->epoch-time-provider epoch-time-provider)
                   ^List (list* (map convert/->version sign-versions))))
 
-(comment 
+(comment
   (def my-signer
     (default-signer {:sign-versions [:mws :mwsv2]
                      :app-uuid (random-uuid)
@@ -108,9 +108,10 @@ B8+UoQ/ICy2ahrEljIQOLSqekDRq8QaRSpIZ2MNFVRPtH85R/zmxrVvT
   (fn
     ([req]
      (client (update req :headers merge (gen-req-headers signer req))))
-    ([req respond raise]
-     (client (update req :headers merge (gen-req-headers signer req))
-             respond raise))))
+    ;; TODO: Support async
+    #_([req respond raise]
+       (client (update req :headers merge (gen-req-headers signer req))
+               respond raise))))
 
 (comment
   ((wrap-client prn my-signer) {:request-method :post

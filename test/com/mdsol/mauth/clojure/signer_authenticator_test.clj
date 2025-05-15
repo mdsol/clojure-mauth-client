@@ -128,11 +128,30 @@
         "Authenticator validates headers")
     (let [req (update (request-fn) :headers
                       merge headers)]
-      (is (= req #_{:status 401 :body "oops!"}
+      (is (= req
              ((auth/wrap-handler identity authenticator)
               (update req :headers
                       merge headers)))
-          "Server middleware passes through on success"))))
+          "Server middleware passes through on success"))
+    (is (= {:status 401 :body "oops!"}
+           ((auth/wrap-handler identity authenticator
+                               {:on-auth-failure (constantly
+                                                  {:status 401
+                                                   :body "oops!"})})
+            (-> (request-fn)
+                (update :headers merge headers)
+                (assoc :body "This is not the right body!"))))
+        "Server middleware calls on-auth-failure on failure")
+    (is (= {:status 401 :body "oops!"}
+           ((auth/wrap-handler identity authenticator
+                               {:on-auth-failure (constantly
+                                                  {:status 401
+                                                   :body "oops!"})})
+            (-> (request-fn)
+                (update :headers merge headers)
+                (assoc-in [:headers "X-MWS-Time"] 1)
+                (assoc-in [:headers "MCC-Time"] 1))))
+        "Server middleware calls on-auth-failure on exception")))
 
 (doseq [i (range (count test-cases-v2))]
   (eval

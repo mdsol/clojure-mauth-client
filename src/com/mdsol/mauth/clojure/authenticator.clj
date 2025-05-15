@@ -8,6 +8,7 @@
     MAuthRequest
     MAuthRequest$Builder
     RequestAuthenticator)
+   (com.mdsol.mauth.exception MAuthValidationException)
    (com.mdsol.mauth.utils ClientPublicKeyProvider)
    (java.net URI)))
 
@@ -69,17 +70,19 @@
 (defn valid?
   "Returns `true` if the Ring request map passes `authenticator`'s validation."
   [^Authenticator authenticator request]
-  (.authenticate authenticator (mauth-request request)))
+  (try
+    (.authenticate authenticator (mauth-request request))))
 
 (def ^:private default-401
   {:status 401
    :body "MAuth authentication failed."})
 
 (defn default-on-auth-failure
-  ([_request]
+  ([_request _exception]
    default-401)
-  ([_request respond _raise]
-   (respond default-401)))
+  ;; TODO: Support async
+  #_([_request respond _raise]
+     (respond default-401)))
 
 (defn wrap-handler
   ([handler authenticator]
@@ -88,10 +91,14 @@
                            :or {on-auth-failure default-on-auth-failure}}]
    (fn
      ([request]
-      (if (valid? authenticator request)
-        (handler request)
-        (on-auth-failure request)))
-     ([request respond raise]
-      (if (valid? authenticator request)
-        (handler request respond raise)
-        (on-auth-failure request respond raise))))))
+      (try
+        (if (valid? authenticator request)
+          (handler request)
+          (on-auth-failure request nil))
+        (catch MAuthValidationException e
+          (on-auth-failure request e))))
+     ;; TODO: Support async
+     #_([request respond raise]
+        (if (valid? authenticator request)
+          (handler request respond raise)
+          (on-auth-failure request respond raise))))))
