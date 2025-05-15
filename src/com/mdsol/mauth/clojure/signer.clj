@@ -31,6 +31,7 @@
    The types for all of these arguments are flexible. Support for new types can
    be added by installing new methods for the multimethods defined in this
    namespace."
+  ^DefaultSigner
   [& {:keys [app-uuid private-key
              epoch-time-provider sign-versions]
       :or {epoch-time-provider current-epoch-time-provider
