@@ -116,11 +116,22 @@
                   (->> (str "mwsv2-"))
                   symbol)
       (let [{:keys ~'[request-fn headers]} (nth test-cases-v2 ~i)]
-        (is (= (norm-headers ~'headers)
-               (norm-headers (signer/gen-req-headers signer-v2 (~'request-fn)))))
+        (is (~'= (norm-headers ~'headers)
+               (norm-headers (signer/gen-req-headers signer-v2 (~'request-fn))))
+            "Signer produces expected headers")
+        ;; = only compares true on streams if it's the same instance
+        (let ~'[req (request-fn)]
+          (is (~'= (-> ~'req
+                       (update :headers merge ~'headers)
+                       (update :headers norm-headers))
+                   (update ((signer/wrap-client identity signer-v2)
+                            ~'req)
+                           :headers norm-headers))
+              "Middleware adds expected headers"))
         (is (true? (auth/valid? authenticator
                                 (update (~'request-fn) :headers
-                                        merge ~'headers))))))))
+                                        merge ~'headers)))
+            "Authenticator validates headers")))))
 
 (doseq [i (range (count test-cases-v1))]
   (eval
@@ -130,8 +141,19 @@
                   (->> (str "mws-"))
                   symbol)
       (let [{:keys ~'[request-fn headers]} (nth test-cases-v1 ~i)]
-        (is (= (norm-headers ~'headers)
-               (norm-headers (signer/gen-req-headers signer-v1 (~'request-fn)))))
+        (is (~'= (norm-headers ~'headers)
+               (norm-headers (signer/gen-req-headers signer-v1 (~'request-fn))))
+            "Signer produces expected headers")
+        ;; = only compares true on streams if it's the same instance
+        (let ~'[req (request-fn)]
+          (is (~'= (-> ~'req
+                       (update :headers merge ~'headers)
+                       (update :headers norm-headers))
+                   (update ((signer/wrap-client identity signer-v1)
+                            ~'req)
+                           :headers norm-headers))
+              "Middleware adds expected headers"))
         (is (true? (auth/valid? authenticator
                                 (update (~'request-fn) :headers
-                                        merge ~'headers))))))))
+                                        merge ~'headers)))
+            "Authenticator validates headers")))))
