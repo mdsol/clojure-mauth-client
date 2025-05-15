@@ -2,7 +2,7 @@
   (:require
    [clojure.string :as str])
   (:import
-   (clojure.lang IFn Keyword)
+   (clojure.lang IDeref IFn Keyword)
    (com.mdsol.mauth MAuthVersion)
    (com.mdsol.mauth.util EpochTimeProvider)
    (java.io
@@ -10,7 +10,8 @@
     CharArrayReader
     InputStream
     StringReader)
-   (java.util UUID)))
+   (java.util UUID)
+   [java.util.function IntSupplier LongSupplier Supplier]))
 
 (set! *warn-on-reflection* true)
 
@@ -60,7 +61,27 @@
   (as-epoch-time-provider [this]
     (reify EpochTimeProvider
       (inSeconds [_]
-        (long (this))))))
+        (long (this)))))
+  IDeref
+  (as-epoch-time-provider [this]
+    (reify EpochTimeProvider
+      (inSeconds [_]
+        (long @this))))
+  Supplier
+  (as-epoch-time-provider [this]
+    (reify EpochTimeProvider
+      (inSeconds [_]
+        (long (.get this)))))
+  LongSupplier
+  (as-epoch-time-provider [this]
+    (reify EpochTimeProvider
+      (inSeconds [_]
+        (.getAsLong this))))
+  IntSupplier
+  (as-epoch-time-provider [this]
+    (reify EpochTimeProvider
+      (inSeconds [_]
+        (long (.getAsInt this))))))
 
 (defn ->epoch-time-provider
   "Converts argument to an `EpochTimeProvider`.

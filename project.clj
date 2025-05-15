@@ -14,9 +14,11 @@
                  [clj-http "3.13.0"]
                  [org.clojure/data.json "2.5.0"]
                  [javax.xml.bind/jaxb-api "2.3.1"]
-                 [com.mdsol/mauth-signer "16.0.0"]]
+                 [com.mdsol/mauth-authenticator "19.0.0"]
+                 [com.mdsol/mauth-signer "19.0.0"]]
 
-  :profiles {:test {:dependencies [[com.mdsol/mauth-test-utils "16.0.0+0-a6fb9a5f+20240725-1833-SNAPSHOT"]]}}
+  :profiles {:test {:dependencies [[com.mdsol/mauth-authenticator-apachehttp "19.0.0"]
+                                   [com.mdsol/mauth-test-utils "19.0.0"]]}}
 
   :repositories [["maven-prod-virtual" {:url      "https://mdsol.jfrog.io/mdsol/maven-prod-virtual"
                                         :username :env/artifactory_username

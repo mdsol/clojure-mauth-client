@@ -1,12 +1,15 @@
-(ns com.mdsol.mauth.clojure.signer-test
+(ns com.mdsol.mauth.clojure.signer-authenticator-test
   (:require
    [camel-snake-kebab.core :as csk]
    [charred.api :as charred]
    [clojure.java.io :as io]
    [clojure.string :as str]
    [clojure.test :refer [deftest is]]
+   [com.mdsol.mauth.clojure.authenticator :as auth]
    [com.mdsol.mauth.clojure.signer :as signer])
   (:import
+   (com.mdsol.mauth.util MAuthKeysHelper)
+   (com.mdsol.mauth.utils ClientPublicKeyProvider)
    (java.io File FilenameFilter)
    (java.net URI)))
 
@@ -32,9 +35,10 @@
 
 (defn read-case [^File path]
   {:name (.getName path)
-   :request (some-> (child-by-ext path ".req")
-                    (charred/read-json :key-fn csk/->kebab-case-keyword)
-                    (ringify-request path))
+   ;; Recreate request each time because some contain stateful streams
+   :request-fn #(some-> (child-by-ext path ".req")
+                     (charred/read-json :key-fn csk/->kebab-case-keyword)
+                     (ringify-request path))
    ;; This implementation does not expose these intermediate steps in a testable
    ;; way. That's fine, because they aren't part of the public contract anyway
    ;; and don't really need to be tested directly.
@@ -45,13 +49,16 @@
    :headers (some-> (child-by-ext path ".authz")
                     charred/read-json)})
 
+(def signing-config
+  (-> (io/file suite-base "signing-config.json")
+      (charred/read-json :key-fn csk/->kebab-case-keyword)
+      (update :app-uuid parse-uuid)))
+
 (def signer
-  (let [{:keys [app-uuid request-time private-key-file]}
-        (charred/read-json (io/file suite-base "signing-config.json")
-                           :key-fn csk/->kebab-case-keyword)]
+  (let [{:keys [app-uuid request-time private-key-file]} signing-config]
     (signer/default-signer :app-uuid app-uuid
-                        :private-key (slurp (io/file suite-base private-key-file))
-                        :epoch-time-provider (constantly request-time))))
+                           :private-key (slurp (io/file suite-base private-key-file))
+                           :epoch-time-provider (constantly request-time))))
 
 (def ignored-test-cases
   #{;; In HTTP, foo//bar is not the same as foo/bar. This case is incorrect.
@@ -60,6 +67,7 @@
     "get-vanilla-query-space"})
 
 (def test-cases
+  ;; TODO: v1 cases
   (->> (io/file suite-base "protocols" "MWSV2")
        .listFiles
        (remove #(ignored-test-cases (.getName ^File %)))
@@ -71,11 +79,43 @@
       (update-vals str)
       vec))
 
+#_(use-fixtures :once
+    (fn [f]
+      (binding [*mauth-server-port* (PortFinder/findFreePort)]
+        (FakeMAuthServer/start *mauth-server-port*)
+        (try
+          (FakeMAuthServer/return200)
+          (Security/addProvider (BouncyCastleProvider.))
+          (f)
+          (finally
+            (FakeMAuthServer/stop))))))
+
+(def pub-key
+  (MAuthKeysHelper/getPublicKeyFromString
+   (slurp (io/file suite-base "signing-params" "rsa-key-pub")
+          :encoding "utf-8")))
+
+(def pk-provider
+  (reify ClientPublicKeyProvider
+    (getPublicKey [_ app-uuid]
+      (if (= app-uuid (:app-uuid signing-config))
+        pub-key
+        (throw (ex-info "Unexpected key requested"
+                        {:received app-uuid
+                         :expected (:app-uuid signing-config)}))))))
+
+(def authenticator
+  (auth/default-authenticator :client-pk-provider pk-provider
+                              :epoch-time-provider (constantly 1444672125)))
+
 ;; Index-based iteration, because some requests are input streams, and they
 ;; cannot be used as literals for evaluation.
 (doseq [i (range (count test-cases))]
   (eval
    `(deftest ~(-> test-cases (nth i) :name symbol)
-      (is (= ~(-> test-cases (nth i) :headers norm-headers)
-             (norm-headers (signer/gen-req-headers
-                            signer (-> test-cases (nth ~i) :request))))))))
+      (let [{:keys ~'[request-fn headers]} (nth test-cases ~i)]
+        (is (= (norm-headers ~'headers)
+               (norm-headers (signer/gen-req-headers signer (~'request-fn)))))
+        (is (true? (auth/valid? authenticator
+                                (update (~'request-fn) :headers
+                                        merge ~'headers))))))))
