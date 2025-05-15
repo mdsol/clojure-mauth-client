@@ -22,7 +22,6 @@
     (str x)))
 
 (defn- mauth-request ^MAuthRequest [request]
-  (prn request)
   (let [{:keys [request-method uri body headers query-string]} request
         java-uri (URI. (str uri \? query-string))
         [t b] (convert/->bytes-or-input-stream body)]
