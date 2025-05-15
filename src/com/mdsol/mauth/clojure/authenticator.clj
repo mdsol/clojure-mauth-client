@@ -78,6 +78,7 @@
    :body "MAuth authentication failed."})
 
 (defn default-on-auth-failure
+  "Returns a static map with a 401 response."
   ([_]
    default-401)
   ;; TODO: Support async
