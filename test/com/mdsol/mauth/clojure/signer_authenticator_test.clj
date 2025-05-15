@@ -108,6 +108,32 @@
   (auth/default-authenticator :client-pk-provider pk-provider
                               :epoch-time-provider (constantly 1444672125)))
 
+(defn validate-test-case [test-case signer]
+  (let [{:keys [request-fn headers]} test-case]
+    (is (= (norm-headers headers)
+           (norm-headers (signer/gen-req-headers signer (request-fn))))
+        "Signer produces expected headers")
+    ;; = only compares true on streams if it's the same instance
+    (let [req (request-fn)]
+      (is (= (-> req
+                 (update :headers merge headers)
+                 (update :headers norm-headers))
+             (update ((signer/wrap-client identity signer)
+                      req)
+                     :headers norm-headers))
+          "Client middleware adds expected headers"))
+    (is (true? (auth/valid? authenticator
+                            (update (request-fn) :headers
+                                    merge headers)))
+        "Authenticator validates headers")
+    (let [req (update (request-fn) :headers
+                      merge headers)]
+      (is (= req #_{:status 401 :body "oops!"}
+             ((auth/wrap-handler identity authenticator)
+              (update req :headers
+                      merge headers)))
+          "Server middleware passes through on success"))))
+
 (doseq [i (range (count test-cases-v2))]
   (eval
    `(deftest ~(-> test-cases-v2
@@ -115,23 +141,7 @@
                   :name
                   (->> (str "mwsv2-"))
                   symbol)
-      (let [{:keys ~'[request-fn headers]} (nth test-cases-v2 ~i)]
-        (is (~'= (norm-headers ~'headers)
-                 (norm-headers (signer/gen-req-headers signer-v2 (~'request-fn))))
-            "Signer produces expected headers")
-        ;; = only compares true on streams if it's the same instance
-        (let ~'[req (request-fn)]
-          (is (~'= (-> ~'req
-                       (update :headers merge ~'headers)
-                       (update :headers norm-headers))
-                   (update ((signer/wrap-client identity signer-v2)
-                            ~'req)
-                           :headers norm-headers))
-              "Middleware adds expected headers"))
-        (is (true? (auth/valid? authenticator
-                                (update (~'request-fn) :headers
-                                        merge ~'headers)))
-            "Authenticator validates headers")))))
+      (validate-test-case (nth test-cases-v2 ~i) signer-v2))))
 
 (doseq [i (range (count test-cases-v1))]
   (eval
@@ -140,27 +150,4 @@
                   :name
                   (->> (str "mws-"))
                   symbol)
-      (let [{:keys ~'[request-fn headers]} (nth test-cases-v1 ~i)]
-        (is (~'= (norm-headers ~'headers)
-                 (norm-headers (signer/gen-req-headers signer-v1 (~'request-fn))))
-            "Signer produces expected headers")
-        ;; = only compares true on streams if it's the same instance
-        (let ~'[req (request-fn)]
-          (is (~'= (-> ~'req
-                       (update :headers merge ~'headers)
-                       (update :headers norm-headers))
-                   (update ((signer/wrap-client identity signer-v1)
-                            ~'req)
-                           :headers norm-headers))
-              "Client middleware adds expected headers"))
-        (is (true? (auth/valid? authenticator
-                                (update (~'request-fn) :headers
-                                        merge ~'headers)))
-            "Authenticator validates headers")
-        (let [~'req (update (~'request-fn) :headers
-                            merge ~'headers)]
-          (is (~'= ~'req #_{:status 401 :body "oops!"}
-                   ((auth/wrap-handler identity authenticator)
-                    (update ~'req :headers
-                            merge ~'headers)))
-              "Server middleware passes through on success"))))))
+      (validate-test-case (nth test-cases-v1 ~i) signer-v1))))
