@@ -6,12 +6,6 @@
   :dependencies [[camel-snake-kebab "0.4.3"]
                  [com.cnuernber/charred "1.033"]
                  [org.clojure/clojure "1.12.0"]
-                 #_[xsc/pem-reader "0.1.1"]
-                 #_[digest "1.4.10"]
-                 #_[org.clojure/data.codec "0.1.1"]
-                 #_[clojure-interop/java.security "1.0.5"]
-                 #_[org.clojure/data.json "2.5.0"]
-                 #_[javax.xml.bind/jaxb-api "2.3.1"]
                  [com.mdsol/mauth-authenticator "19.0.0"]
                  [com.mdsol/mauth-signer "19.0.0"]]
 
