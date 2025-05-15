@@ -8,6 +8,7 @@
    [com.mdsol.mauth.clojure.authenticator :as auth]
    [com.mdsol.mauth.clojure.signer :as signer])
   (:import
+   (com.mdsol.mauth.exception MAuthValidationException)
    (com.mdsol.mauth.util MAuthKeysHelper)
    (com.mdsol.mauth.utils ClientPublicKeyProvider)
    (java.io File FilenameFilter)
@@ -137,25 +138,32 @@
             :body "oops!"
             ::got-request true}
            ((auth/wrap-handler identity authenticator
-                               {:on-auth-failure (fn [{::keys [is-request]} exc]
-                                                   (is (nil? exc))
-                                                   {:status 401
-                                                    :body "oops!"
-                                                    ::got-request is-request})})
+                               {:on-auth-failure
+                                (fn [{::keys [is-request]} exc]
+                                  (is (nil? exc))
+                                  {:status 401
+                                   :body "oops!"
+                                   ::got-request is-request})})
             (-> (request-fn)
                 (update :headers merge headers)
                 (assoc :body "This is not the right body!")
                 (assoc ::is-request true))))
         "Server middleware calls on-auth-failure on failure")
-    (is (= {:status 401 :body "oops!"}
+    (is (= {:status 401
+            :body "oops!"
+            ::got-request true}
            ((auth/wrap-handler identity authenticator
-                               {:on-auth-failure (constantly
-                                                  {:status 401
-                                                   :body "oops!"})})
+                               {:on-auth-failure
+                                (fn [{::keys [is-request]} exc]
+                                  (is (instance? MAuthValidationException exc))
+                                  {:status 401
+                                   :body "oops!"
+                                   ::got-request is-request})})
             (-> (request-fn)
                 (update :headers merge headers)
                 (assoc-in [:headers "X-MWS-Time"] 1)
-                (assoc-in [:headers "MCC-Time"] 1))))
+                (assoc-in [:headers "MCC-Time"] 1)
+                (assoc ::is-request true))))
         "Server middleware calls on-auth-failure on exception")))
 
 (doseq [i (range (count test-cases-v2))]
