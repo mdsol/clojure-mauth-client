@@ -37,8 +37,8 @@
   {:name (.getName path)
    ;; Recreate request each time because some contain stateful streams
    :request-fn #(some-> (child-by-ext path ".req")
-                     (charred/read-json :key-fn csk/->kebab-case-keyword)
-                     (ringify-request path))
+                        (charred/read-json :key-fn csk/->kebab-case-keyword)
+                        (ringify-request path))
    ;; This implementation does not expose these intermediate steps in a testable
    ;; way. That's fine, because they aren't part of the public contract anyway
    ;; and don't really need to be tested directly.
@@ -54,11 +54,18 @@
       (charred/read-json :key-fn csk/->kebab-case-keyword)
       (update :app-uuid parse-uuid)))
 
-(def signer
+(def signer-v2
   (let [{:keys [app-uuid request-time private-key-file]} signing-config]
     (signer/default-signer :app-uuid app-uuid
                            :private-key (slurp (io/file suite-base private-key-file))
                            :epoch-time-provider (constantly request-time))))
+
+(def signer-v1
+  (let [{:keys [app-uuid request-time private-key-file]} signing-config]
+    (signer/default-signer :app-uuid app-uuid
+                           :private-key (slurp (io/file suite-base private-key-file))
+                           :epoch-time-provider (constantly request-time)
+                           :sign-versions [:mws])))
 
 (def ignored-test-cases
   #{;; In HTTP, foo//bar is not the same as foo/bar. This case is incorrect.
@@ -66,10 +73,13 @@
     ;; This is invalid URL syntax. Query strings may not contain spaces.
     "get-vanilla-query-space"})
 
-(def test-cases
-  ;; TODO: v1 cases
-  (->> (io/file suite-base "protocols" "MWSV2")
-       .listFiles
+(def test-cases-v2
+  (->> (.listFiles (io/file suite-base "protocols" "MWSV2"))
+       (remove #(ignored-test-cases (.getName ^File %)))
+       (map read-case)))
+
+(def test-cases-v1
+  (->> (.listFiles (io/file suite-base "protocols" "MWS"))
        (remove #(ignored-test-cases (.getName ^File %)))
        (map read-case)))
 
@@ -77,18 +87,8 @@
   (-> m
       (update-keys str/lower-case)
       (update-vals str)
-      vec))
-
-#_(use-fixtures :once
-    (fn [f]
-      (binding [*mauth-server-port* (PortFinder/findFreePort)]
-        (FakeMAuthServer/start *mauth-server-port*)
-        (try
-          (FakeMAuthServer/return200)
-          (Security/addProvider (BouncyCastleProvider.))
-          (f)
-          (finally
-            (FakeMAuthServer/stop))))))
+      vec
+      (->> (sort-by first))))
 
 (def pub-key
   (MAuthKeysHelper/getPublicKeyFromString
@@ -108,12 +108,30 @@
   (auth/default-authenticator :client-pk-provider pk-provider
                               :epoch-time-provider (constantly 1444672125)))
 
-(doseq [i (range (count test-cases))]
+(doseq [i (range (count test-cases-v2))]
   (eval
-   `(deftest ~(-> test-cases (nth i) :name symbol)
-      (let [{:keys ~'[request-fn headers]} (nth test-cases ~i)]
+   `(deftest ~(-> test-cases-v2
+                  (nth i)
+                  :name
+                  (->> (str "mwsv2-"))
+                  symbol)
+      (let [{:keys ~'[request-fn headers]} (nth test-cases-v2 ~i)]
         (is (= (norm-headers ~'headers)
-               (norm-headers (signer/gen-req-headers signer (~'request-fn)))))
+               (norm-headers (signer/gen-req-headers signer-v2 (~'request-fn)))))
+        (is (true? (auth/valid? authenticator
+                                (update (~'request-fn) :headers
+                                        merge ~'headers))))))))
+
+(doseq [i (range (count test-cases-v1))]
+  (eval
+   `(deftest ~(-> test-cases-v1
+                  (nth i)
+                  :name
+                  (->> (str "mws-"))
+                  symbol)
+      (let [{:keys ~'[request-fn headers]} (nth test-cases-v1 ~i)]
+        (is (= (norm-headers ~'headers)
+               (norm-headers (signer/gen-req-headers signer-v1 (~'request-fn)))))
         (is (true? (auth/valid? authenticator
                                 (update (~'request-fn) :headers
                                         merge ~'headers))))))))
