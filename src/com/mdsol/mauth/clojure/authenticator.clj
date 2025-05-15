@@ -36,7 +36,23 @@
           (= :stream t) (.withBodyInputStream b))
         (.build))))
 
-(defn default-authenticator ^RequestAuthenticator
+(defn default-authenticator
+  "Returns an authenticator capable of validating MAuth signatures.
+     
+   Required arguments:
+   - client-pk-provider: An instance of
+     `com.mdsol.mauth.utils.ClientPublicKeyProvider`
+   Optional arguments:
+   - epoch-time-provider: A function which returns the current time as seconds
+     since the Unix epoch. Defaults to a function which returns the system clock
+     time.
+   - v2-only: If truthy, MAuth v1 requests will fail validation. Defaults to
+     `false`.
+   
+   The types for all of these arguments are flexible. Support for new types can
+   be added by extending the protocols defined in
+   `com.mdsol.mauth.clojure.convert`."
+  ^RequestAuthenticator
   [& {:keys [client-pk-provider
              validation-timeout-seconds
              epoch-time-provider
@@ -49,5 +65,7 @@
                          (convert/->epoch-time-provider epoch-time-provider)
                          (boolean v2-only)))
 
-(defn valid? [^Authenticator authenticator request]
+(defn valid?
+  "Returns `true` if the Ring request map passes `authenticator`'s validation."
+  [^Authenticator authenticator request]
   (.authenticate authenticator (mauth-request request)))

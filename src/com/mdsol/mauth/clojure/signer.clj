@@ -29,8 +29,8 @@
      be produced. Defaults to `[:mwsv2]`.
    
    The types for all of these arguments are flexible. Support for new types can
-   be added by installing new methods for the multimethods defined in this
-   namespace."
+   be added by extending the protocols defined in
+   `com.mdsol.mauth.clojure.convert`."
   ^DefaultSigner
   [& {:keys [app-uuid private-key
              epoch-time-provider sign-versions]
@@ -41,7 +41,7 @@
                   ^EpochTimeProvider (convert/->epoch-time-provider epoch-time-provider)
                   ^List (list* (map convert/->version sign-versions))))
 
-(comment
+(comment 
   (def my-signer
     (default-signer {:sign-versions [:mws :mwsv2]
                      :app-uuid (random-uuid)
@@ -75,7 +75,7 @@ B8+UoQ/ICy2ahrEljIQOLSqekDRq8QaRSpIZ2MNFVRPtH85R/zmxrVvT
 -----END RSA PRIVATE KEY-----"})))
 
 (defn gen-req-headers
-  "Given a signer and a Ring request, returns a map of MAuth headers."
+  "Given a signer and a Ring request map, returns a map of MAuth headers."
   [^Signer signer
    {:keys [request-method body ^String uri ^String query-string]}]
   (let [method (if (ident? request-method)
