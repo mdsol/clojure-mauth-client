@@ -14,10 +14,10 @@
                  [clj-http "3.13.0"]
                  [org.clojure/data.json "2.5.0"]
                  [javax.xml.bind/jaxb-api "2.3.1"]
-                 [com.mdsol/mauth-authenticator "19.0.0"]
-                 [com.mdsol/mauth-signer "19.0.0"]]
+                 [com.mdsol/mauth-authenticator "17.0.0"]
+                 [com.mdsol/mauth-signer "17.0.0"]]
 
-  :profiles {:test {:dependencies [[com.mdsol/mauth-authenticator-apachehttp "19.0.0"]
+  :profiles {:test {:dependencies [[com.mdsol/mauth-authenticator-apachehttp "17.0.0"]
                                    [pjstadig/humane-test-output "0.8.3"]]
                     :injections [(require 'pjstadig.humane-test-output)
                                  (pjstadig.humane-test-output/activate!)]}}
