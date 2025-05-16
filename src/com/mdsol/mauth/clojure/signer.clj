@@ -8,7 +8,11 @@
 
 (set! *warn-on-reflection* true)
 
-(defmulti ->uuid-impl type)
+(defmulti ->uuid-impl
+  "Multimethod to convert an arbitrary type to `UUID`.
+   This multimethod underlies the `->uuid` function, which simply adds the
+   appropriate return type hint."
+  type)
 (defmethod ->uuid-impl UUID [x]
   x)
 (defmethod ->uuid-impl String [x]
@@ -16,10 +20,18 @@
 (defmethod ->uuid-impl :default [x]
   (->uuid-impl (str x)))
 
-(defn ->uuid ^UUID [x]
+(defn ->uuid
+  "Converts an arbitrary type to `UUID`.
+   To extend support to additional types, define a new method for
+   `->uuid-impl`."
+  ^UUID [x]
   (->uuid-impl x))
 
-(defmulti ->version-impl type)
+(defmulti ->version-impl
+  "Multimethod to convert an arbitrary type to `MAuthVersion`.
+   This multimethod underlies the `->version` function, which simply adds the
+   appropriate return type hint."
+  type)
 (defmethod ->version-impl MAuthVersion [x]
   x)
 (defmethod ->version-impl String [x]
@@ -29,10 +41,18 @@
 (defmethod ->version-impl Keyword [x]
   (->version-impl (name x)))
 
-(defn ->version ^MAuthVersion [x]
+(defn ->version
+  "Converts an arbitrary type to `MAuthVersion`.
+   To extend support to additional types, define a new method for
+   `->version-impl`."
+  ^MAuthVersion [x]
   (->version-impl x))
 
-(defmulti ->epoch-time-provider-impl type)
+(defmulti ->epoch-time-provider-impl
+  "Multimethod to convert an arbitrary type to `EpochTimeProvider`.
+   This multimethod underlies the `->epoch-time-provider` function, which simply
+   adds the appropriate return type hint."
+  type)
 (defmethod ->epoch-time-provider-impl EpochTimeProvider [x]
   x)
 (defmethod ->epoch-time-provider-impl IFn [x]
@@ -40,15 +60,38 @@
     (inSeconds [_this]
       (long (x)))))
 
-(defn ->epoch-time-provider ^EpochTimeProvider [x]
+(defn ->epoch-time-provider
+  "Converts an arbitrary type to `EpochTimeProvider`.
+   To extend support to additional types, define a new method for
+   `->epoch-time-provider-impl`."
+  ^EpochTimeProvider [x]
   (->epoch-time-provider-impl x))
 
-(def current-epoch-time-provider (CurrentEpochTimeProvider.))
+(def current-epoch-time-provider
+  "Provides the actual current time according to the system clock."
+  (CurrentEpochTimeProvider.))
 
-(defn default-signer [{:keys [app-uuid private-key
-                              epoch-time-provider sign-versions]
-                       :or {epoch-time-provider current-epoch-time-provider
-                            sign-versions [:MWSV2]}}]
+(defn default-signer
+  "Returns a signer capable of producing MAuth signatures.
+   
+   Required arguments:
+   - app-uuid: The UUID registered in the MAuth server for the signing
+     application.
+   - private-key: The application's private key as a String.
+   Optional arguments:
+   - epoch-time-provider: A function which returns the current time as seconds
+     since the Unix epoch. Defaults to a function which returns the system clock
+     time.
+   - sign-versions: A collection of MAuth versions for which signatures should
+     be produced. Defaults to `[:MWSV2]`.
+   
+   The types for all of these arguments are flexible. Support for new types can
+   be added by installing new methods for the multimethods defined in this
+   namespace."
+  [{:keys [app-uuid private-key
+           epoch-time-provider sign-versions]
+    :or {epoch-time-provider current-epoch-time-provider
+         sign-versions [:MWSV2]}}]
   (DefaultSigner. (->uuid app-uuid)
                   ^String private-key
                   (->epoch-time-provider epoch-time-provider)
@@ -88,7 +131,12 @@ B8+UoQ/ICy2ahrEljIQOLSqekDRq8QaRSpIZ2MNFVRPtH85R/zmxrVvT
 -----END RSA PRIVATE KEY-----"})))
 
 ;; The JVM does not have union types, so this is the best we can do
-(defmulti ->array-or-input-stream type)
+(defmulti ->array-or-input-stream
+  "Converts an arbitrary type to either `byte[]` or `InputStream`.
+   The return value is a vector whose first element is either `:array` or
+   `:input-stream`, and whose second element is a value of the corresponding
+   type."
+  type)
 
 ;; Lazy reading
 (defmethod ->array-or-input-stream InputStream [x]
@@ -109,9 +157,10 @@ B8+UoQ/ICy2ahrEljIQOLSqekDRq8QaRSpIZ2MNFVRPtH85R/zmxrVvT
 (defmethod ->array-or-input-stream CharArrayReader [^CharArrayReader x]
   (->array-or-input-stream (slurp x)))
 
-(defn gen-req-headers [^Signer signer
-                       {:keys [request-method body ^String uri
-                               ^String query-string]}]
+(defn gen-req-headers
+  "Given a signer and a Ring request, returns a map of MAuth headers."
+  [^Signer signer
+   {:keys [request-method body ^String uri ^String query-string]}]
   (let [method (if (ident? request-method)
                  (name request-method)
                  ^String request-method)
@@ -135,7 +184,10 @@ B8+UoQ/ICy2ahrEljIQOLSqekDRq8QaRSpIZ2MNFVRPtH85R/zmxrVvT
                            :uri "/foo"
                            :body "Hey hey"}))
 
-(defn wrap-client [signer client]
+(defn wrap-client
+  "Middleware for clients conforming to the Ring/clj-http signature.
+   Adds MAuth headers to requests."
+  [client signer]
   (fn
     ([req]
      (client (update req :headers merge (gen-req-headers signer req))))
