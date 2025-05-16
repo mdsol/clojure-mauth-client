@@ -1,9 +1,14 @@
 (ns com.mdsol.mauth.clojure.signer
   (:require [clojure.string :as str])
   (:import (clojure.lang IFn Keyword)
-           (com.mdsol.mauth DefaultSigner MAuthVersion Signer)
+           (com.mdsol.mauth DefaultSigner
+                            MAuthVersion
+                            Signer)
            (com.mdsol.mauth.util CurrentEpochTimeProvider EpochTimeProvider)
-           (java.io ByteArrayInputStream CharArrayReader InputStream StringReader)
+           (java.io ByteArrayInputStream
+                    CharArrayReader
+                    InputStream
+                    StringReader)
            (java.util List UUID)))
 
 (set! *warn-on-reflection* true)
@@ -13,12 +18,9 @@
    This multimethod underlies the `->uuid` function, which simply adds the
    appropriate return type hint."
   type)
-(defmethod ->uuid-impl UUID [x]
-  x)
-(defmethod ->uuid-impl String [x]
-  (parse-uuid x))
-(defmethod ->uuid-impl :default [x]
-  (->uuid-impl (str x)))
+(defmethod ->uuid-impl UUID [x] x)
+(defmethod ->uuid-impl String [x] (parse-uuid x))
+(defmethod ->uuid-impl :default [x] (->uuid-impl (str x)))
 
 (defn ->uuid
   "Converts an arbitrary type to `UUID`.
@@ -32,14 +34,10 @@
    This multimethod underlies the `->version` function, which simply adds the
    appropriate return type hint."
   type)
-(defmethod ->version-impl MAuthVersion [x]
-  x)
-(defmethod ->version-impl String [x]
-  (MAuthVersion/valueOf (str/upper-case x)))
-(defmethod ->version-impl :default [x]
-  (->version-impl (str x)))
-(defmethod ->version-impl Keyword [x]
-  (->version-impl (name x)))
+(defmethod ->version-impl MAuthVersion [x] x)
+(defmethod ->version-impl String [x] (MAuthVersion/valueOf (str/upper-case x)))
+(defmethod ->version-impl :default [x] (->version-impl (str x)))
+(defmethod ->version-impl Keyword [x] (->version-impl (name x)))
 
 (defn ->version
   "Converts an arbitrary type to `MAuthVersion`.
@@ -53,8 +51,7 @@
    This multimethod underlies the `->epoch-time-provider` function, which simply
    adds the appropriate return type hint."
   type)
-(defmethod ->epoch-time-provider-impl EpochTimeProvider [x]
-  x)
+(defmethod ->epoch-time-provider-impl EpochTimeProvider [x] x)
 (defmethod ->epoch-time-provider-impl IFn [x]
   (reify EpochTimeProvider
     (inSeconds [_this]
@@ -83,23 +80,23 @@
      since the Unix epoch. Defaults to a function which returns the system clock
      time.
    - sign-versions: A collection of MAuth versions for which signatures should
-     be produced. Defaults to `[:MWSV2]`.
+     be produced. Defaults to `[:mwsv2]`.
    
    The types for all of these arguments are flexible. Support for new types can
    be added by installing new methods for the multimethods defined in this
    namespace."
-  [{:keys [app-uuid private-key
-           epoch-time-provider sign-versions]
-    :or {epoch-time-provider current-epoch-time-provider
-         sign-versions [:MWSV2]}}]
+  [& {:keys [app-uuid private-key
+             epoch-time-provider sign-versions]
+      :or {epoch-time-provider current-epoch-time-provider
+           sign-versions [:mwsv2]}}]
   (DefaultSigner. (->uuid app-uuid)
                   ^String private-key
                   (->epoch-time-provider epoch-time-provider)
                   ^List (list* (map ->version sign-versions))))
 
 (comment
-  (def signer
-    (default-signer {:sign-versions [:MWS :MWSV2]
+  (def my-signer
+    (default-signer {:sign-versions [:mws :mwsv2]
                      :app-uuid (random-uuid)
                      ;; This key was generated specifically for testing
                      :private-key "-----BEGIN RSA PRIVATE KEY-----
@@ -156,6 +153,8 @@ B8+UoQ/ICy2ahrEljIQOLSqekDRq8QaRSpIZ2MNFVRPtH85R/zmxrVvT
   (->array-or-input-stream (slurp x)))
 (defmethod ->array-or-input-stream CharArrayReader [^CharArrayReader x]
   (->array-or-input-stream (slurp x)))
+(defmethod ->array-or-input-stream nil [_]
+  [:array nil])
 
 (defn gen-req-headers
   "Given a signer and a Ring request, returns a map of MAuth headers."
@@ -180,9 +179,9 @@ B8+UoQ/ICy2ahrEljIQOLSqekDRq8QaRSpIZ2MNFVRPtH85R/zmxrVvT
                                             query-string)))))
 
 (comment
-  (gen-req-headers signer {:request-method :post
-                           :uri "/foo"
-                           :body "Hey hey"}))
+  (gen-req-headers my-signer {:request-method :post
+                              :uri "/foo"
+                              :body "Hey hey"}))
 
 (defn wrap-client
   "Middleware for clients conforming to the Ring/clj-http signature.
@@ -196,7 +195,7 @@ B8+UoQ/ICy2ahrEljIQOLSqekDRq8QaRSpIZ2MNFVRPtH85R/zmxrVvT
              respond raise))))
 
 (comment
-  ((wrap-client signer prn) {:request-method :post
-                             :headers {"content-type" "whatever"}
-                             :uri "/foo"
-                             :body "Hey hey"}))
+  ((wrap-client prn my-signer) {:request-method :post
+                                :headers {"content-type" "whatever"}
+                                :uri "/foo"
+                                :body "Hey hey"}))
