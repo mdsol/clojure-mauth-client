@@ -149,15 +149,29 @@
                 (update :headers merge headers)
                 (assoc :body "This is not the right body!")
                 (assoc ::is-request true))))
-        "Server middleware calls on-auth-failure on failure")
+        "Server middleware calls on-auth-failure on mismatched signature")
     (is (= {:status 401
             :body "oops!"
             ::got-request true}
            ((auth/wrap-handler identity authenticator
                                {:on-auth-failure
                                 (fn [{:keys [request exception handler]}]
-                                  (is (instance? MAuthValidationException
-                                                 exception))
+                                  (is (instance? Exception exception))
+                                  (is (= identity handler))
+                                  {:status 401
+                                   :body "oops!"
+                                   ::got-request (::is-request request)})})
+            (-> (request-fn)
+                (assoc :headers {})
+                (assoc ::is-request true))))
+        "Server middleware calls on-auth-failure on missing auth headers.")
+    (is (= {:status 401
+            :body "oops!"
+            ::got-request true}
+           ((auth/wrap-handler identity authenticator
+                               {:on-auth-failure
+                                (fn [{:keys [request exception handler]}]
+                                  (is (instance? Exception exception))
                                   (is (= identity handler))
                                   {:status 401
                                    :body "oops!"
@@ -167,9 +181,9 @@
                 (assoc-in [:headers "X-MWS-Time"] 1)
                 (assoc-in [:headers "MCC-Time"] 1)
                 (assoc ::is-request true))))
-        "Server middleware calls on-auth-failure on exception")
+        "Server middleware calls on-auth-failure on expired signature")
     (is (= {:status 401
-            :body {:message "MAuth request validation failed because of timeout 10s"}}
+            :body {:message "Unauthorized."}}
            ((auth/wrap-handler identity authenticator)
             (-> (request-fn)
                 (update :headers merge headers)
@@ -177,7 +191,7 @@
                 (assoc-in [:headers "MCC-Time"] 1))))
         "default-on-auth-failure returns exception message on exception")
     (is (= {:status 401
-            :body {:message "MAuth authentication failed."}}
+            :body {:message "Unauthorized."}}
            ((auth/wrap-handler identity authenticator)
             (-> (request-fn)
                 (update :headers merge headers)

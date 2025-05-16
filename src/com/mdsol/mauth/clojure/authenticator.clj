@@ -4,6 +4,7 @@
    [com.mdsol.mauth.clojure.convert :as convert]
    [com.mdsol.mauth.clojure.signer :as signer])
   (:import
+   (clojure.lang ExceptionInfo)
    (com.mdsol.mauth
     Authenticator
     MAuthRequest
@@ -92,11 +93,9 @@
 
 (defn default-on-auth-failure
   "Returns a static map with a 401 response."
-  ([{:keys [exception]}]
+  ([_]
    {:status 401
-    :body {:message (if exception
-                      (ex-message exception)
-                      "MAuth authentication failed.")}})
+    :body {:message "Unauthorized."}})
   ;; TODO: Support async
   #_([_request respond _raise]
      (respond default-401)))
@@ -117,16 +116,28 @@
                            :or {on-auth-failure default-on-auth-failure}}]
    (fn
      ([request]
-      (let [data (mauth-data request)]
-        (try
-          (if (valid? authenticator data)
+      (try
+        (let [data (try
+                     (mauth-data request)
+                     (catch IllegalArgumentException e
+                       (throw (ex-info "Invalid authentication headers."
+                                       {:type ::auth-fail}
+                                       e))))]
+          (if (try
+                (valid? authenticator data)
+                (catch MAuthValidationException e
+                  (throw (ex-info "Failed authentication."
+                                  {:type ::auth-fail}
+                                  e))))
             (handler (assoc request :com.mdsol.mauth/app-uuid (:app-uuid data)))
             (on-auth-failure {:request request
-                              :handler handler}))
-          (catch MAuthValidationException e
+                              :handler handler})))
+        (catch ExceptionInfo e
+          (if (= ::auth-fail (:type (ex-data e)))
             (on-auth-failure {:request request
                               :handler handler
-                              :exception e})))))
+                              :exception e})
+            (throw e)))))
      ;; TODO: Support async
      #_([request respond raise]
         (if (valid? authenticator request)
