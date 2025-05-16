@@ -34,8 +34,6 @@
              ["vcs" "push"]]}
 
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all
-                       :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}}
 
   :jvm-opts ~(concat
               [] ;other opts...
@@ -45,5 +43,4 @@
                               Integer.)]
                     (and (>= v 9) (< v 11)))
                 ["--add-modules" "java.xml.bind"]
-                []))
-  :aot :all)
+                [])))
