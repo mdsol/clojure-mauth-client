@@ -169,7 +169,7 @@
                 (assoc ::is-request true))))
         "Server middleware calls on-auth-failure on exception")
     (is (= {:status 401
-            :body {:message "MAuth request validation failed because request time was older than10s"}}
+            :body {:message "MAuth request validation failed because of timeout 10s"}}
            ((auth/wrap-handler identity authenticator)
             (-> (request-fn)
                 (update :headers merge headers)
