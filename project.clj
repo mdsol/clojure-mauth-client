@@ -3,7 +3,10 @@
   :url "https://github.com/mdsol/clojure-mauth-client"
   :license {:name "MIT"
             :url "https://opensource.org/licenses/MIT"}
-  :dependencies [[org.clojure/clojure "1.12.0"]
+  :dependencies [[camel-snake-kebab "0.4.3"]
+                 [com.cnuernber/charred "1.033"]
+                 [com.mdsol/mauth-test-utils "16.0.0+0-a6fb9a5f+20240725-1833-SNAPSHOT"]
+                 [org.clojure/clojure "1.12.0"]
                  [xsc/pem-reader "0.1.1"]
                  [digest "1.4.10"]
                  [org.clojure/data.codec "0.1.1"]
