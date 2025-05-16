@@ -1,4 +1,4 @@
-(ns com.mdsol.mauth.clojure.client
+(ns com.mdsol.mauth.clojure.signer
   (:require [clojure.string :as str])
   (:import (clojure.lang IFn Keyword)
            (com.mdsol.mauth DefaultSigner MAuthVersion Signer)
