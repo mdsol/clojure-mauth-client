@@ -14,6 +14,10 @@
                  [javax.xml.bind/jaxb-api "2.3.1"]
                  [com.mdsol/mauth-signer "16.0.0"]]
 
+  :repositories [["maven-prod-virtual" {:url      "https://mdsol.jfrog.io/mdsol/maven-prod-virtual"
+                                        :username :env/artifactory_username
+                                        :password :env/artifactory_password}]]
+
   :deploy-repositories [["releases"
                          {:url           "https://clojars.org/repo"
                           :sign-releases false
