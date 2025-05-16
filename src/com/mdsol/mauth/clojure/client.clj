@@ -133,8 +133,7 @@ B8+UoQ/ICy2ahrEljIQOLSqekDRq8QaRSpIZ2MNFVRPtH85R/zmxrVvT
 (comment
   (gen-req-headers signer {:request-method :post
                            :uri "/foo"
-                           :body "Hey hey"})
-  )
+                           :body "Hey hey"}))
 
 (defn wrap-client [signer client]
   (fn
