@@ -1,5 +1,6 @@
 (ns com.mdsol.mauth.clojure.authenticator
   (:require
+   [clojure.string :as str]
    [com.mdsol.mauth.clojure.convert :as convert]
    [com.mdsol.mauth.clojure.signer :as signer])
   (:import
@@ -22,7 +23,9 @@
     (name x)
     (str x)))
 
-(defn- mauth-request ^MAuthRequest [request]
+(defn- mauth-request
+  "Constructs an `MAuthRequest` object from a Ring request map."
+  ^MAuthRequest [request]
   (let [{:keys [request-method uri body headers query-string]} request
         java-uri (URI. (str uri \? query-string))
         [t b] (convert/->bytes-or-input-stream body)]
@@ -68,11 +71,24 @@
                          (convert/->epoch-time-provider epoch-time-provider)
                          (boolean v2-only)))
 
+(defn mauth-data
+  "Extracts key MAuth information from a Ring request and constructs a `MAuthRequest`."
+  [request]
+  (let [mauth-req (mauth-request request)]
+    {:app-uuid (.getAppUUID mauth-req)
+     :mauth-version (-> mauth-req
+                        .getMauthVersion
+                        .name
+                        str/lower-case
+                        keyword)
+     :mauth-request-object mauth-req}))
+
 (defn valid?
-  "Returns `true` if the Ring request map passes `authenticator`'s validation."
+  "Returns `true` if the request passes `authenticator`'s validation."
   [^Authenticator authenticator request]
-  (try
-    (.authenticate authenticator (mauth-request request))))
+  (let [mauth-req (or (:mauth-request-object request)
+                      (:mauth-request-object (mauth-data request)))]
+    (.authenticate authenticator mauth-req)))
 
 (defn default-on-auth-failure
   "Returns a static map with a 401 response."
@@ -101,15 +117,16 @@
                            :or {on-auth-failure default-on-auth-failure}}]
    (fn
      ([request]
-      (try
-        (if (valid? authenticator request)
-          (handler request)
-          (on-auth-failure {:request request
-                            :handler handler}))
-        (catch MAuthValidationException e
-          (on-auth-failure {:request request
-                            :handler handler
-                            :exception e}))))
+      (let [data (mauth-data request)]
+        (try
+          (if (valid? authenticator data)
+            (handler (assoc request :com.mdsol.mauth/app-uuid (:app-uuid data)))
+            (on-auth-failure {:request request
+                              :handler handler}))
+          (catch MAuthValidationException e
+            (on-auth-failure {:request request
+                              :handler handler
+                              :exception e})))))
      ;; TODO: Support async
      #_([request respond raise]
         (if (valid? authenticator request)

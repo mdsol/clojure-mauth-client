@@ -129,7 +129,7 @@
         "Authenticator validates headers")
     (let [req (update (request-fn) :headers
                       merge headers)]
-      (is (= req
+      (is (= (assoc req :com.mdsol.mauth/app-uuid (:app-uuid signing-config))
              ((auth/wrap-handler identity authenticator)
               (update req :headers
                       merge headers)))
@@ -156,7 +156,7 @@
            ((auth/wrap-handler identity authenticator
                                {:on-auth-failure
                                 (fn [{:keys [request exception handler]}]
-                                  (is (instance? MAuthValidationException 
+                                  (is (instance? MAuthValidationException
                                                  exception))
                                   (is (= identity handler))
                                   {:status 401
@@ -192,7 +192,6 @@
                   (->> (str "mwsv2-"))
                   symbol)
       (validate-test-case (nth test-cases-v2 ~i) signer-v2))))
-
 (doseq [i (range (count test-cases-v1))]
   (eval
    `(deftest ~(-> test-cases-v1
