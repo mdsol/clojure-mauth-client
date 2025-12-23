@@ -13,7 +13,7 @@ on:
 jobs:
   build:
     name: "Build & Test"
-    runs-on: selfhosted-ubuntu-medium
+    runs-on: ubuntu-latest
     
     steps:
       - name: Checkout code
@@ -27,7 +27,7 @@ jobs:
 
   test:
     name: "Test (develop branch)"
-    runs-on: selfhosted-ubuntu-medium
+    runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/develop'
     
     steps:
@@ -44,7 +44,7 @@ jobs:
 
   publish:
     name: "Publish to Clojars"
-    runs-on: selfhosted-ubuntu-medium
+    runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     
     steps:
