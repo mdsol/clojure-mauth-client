@@ -19,24 +19,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gzip
-      
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'lein'
-      
-      - name: Install Leiningen
-        run: |
-          wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
-          chmod +x lein
-          sudo mv lein /usr/local/bin/
-          lein version
+      - name: Setup Leiningen
+        uses: ./.github/actions/setup-leiningen
       
       - name: Run tests
         run: lein test
@@ -50,29 +34,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gzip
-      
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - name: Setup Leiningen
+        uses: ./.github/actions/setup-leiningen
         with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'lein'
-      
-      - name: Install Leiningen
-        run: |
-          wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
-          chmod +x lein
-          sudo mv lein /usr/local/bin/
-          lein version
-      
-      - name: Install dependencies
-        run: |
-          lein deps
-          lein pom
+          install-deps: 'true'
       
       - name: Run tests
         run: lein test
@@ -86,29 +51,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gzip
-      
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - name: Setup Leiningen
+        uses: ./.github/actions/setup-leiningen
         with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'lein'
-      
-      - name: Install Leiningen
-        run: |
-          wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
-          chmod +x lein
-          sudo mv lein /usr/local/bin/
-          lein version
-      
-      - name: Install dependencies
-        run: |
-          lein deps
-          lein pom
+          install-deps: 'true'
       
       - name: Run tests
         run: lein test
