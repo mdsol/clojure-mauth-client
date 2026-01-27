@@ -1,0 +1,36 @@
+name: 'Setup Leiningen'
+description: 'Install system dependencies, JDK, and Leiningen for Clojure projects'
+inputs:
+  java-version:
+    description: 'Java version to set up'
+    required: false
+    default: '17'
+  install-deps:
+    description: 'Whether to install Leiningen dependencies (lein deps and lein pom)'
+    required: false
+    default: 'false'
+runs:
+  using: 'composite'
+  steps:
+    - name: Install system dependencies
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gzip
+    
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: ${{ inputs.java-version }}
+    
+    - name: Install Leiningen
+      uses: DeLaGuardo/setup-clojure@13.0
+      with:
+        lein: 'latest'
+    
+    - name: Install Leiningen dependencies
+      if: inputs.install-deps == 'true'
+      shell: bash
+      run: |
+        lein pom
