@@ -25,16 +25,12 @@ runs:
         java-version: ${{ inputs.java-version }}
     
     - name: Install Leiningen
-      shell: bash
-      run: |
-        wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
-        chmod +x lein
-        sudo mv lein /usr/local/bin/
-        lein version
+      uses: DeLaGuardo/setup-clojure@13.0
+      with:
+        lein: 'latest'
     
     - name: Install Leiningen dependencies
       if: inputs.install-deps == 'true'
       shell: bash
       run: |
-        lein deps
         lein pom
